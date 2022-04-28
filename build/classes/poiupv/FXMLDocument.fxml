@@ -48,6 +48,7 @@
                               <ToggleGroup fx:id="herramientasToggleGroup" />
                            </toggleGroup>
                         </RadioMenuItem>
+                        <RadioMenuItem fx:id="lineaMenuButton" mnemonicParsing="false" onAction="#lineaClicked" text="Pintar línea" toggleGroup="$herramientasToggleGroup" />
                         <RadioMenuItem fx:id="moverMenuButton" mnemonicParsing="false" onAction="#moverClicked" text="Mover" toggleGroup="$herramientasToggleGroup" />
                         <RadioMenuItem fx:id="seleccionarMenuButton" mnemonicParsing="false" onAction="#seleccionarClicked" text="Seleccionar" toggleGroup="$herramientasToggleGroup" />
                         <RadioMenuItem fx:id="cambiarColorButton" mnemonicParsing="false" onAction="#cambiarColorButtonClicked" text="Cambiar color" toggleGroup="$herramientasToggleGroup" />
@@ -77,7 +78,7 @@
             </VBox>
             <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" onMouseClicked="#ScrollPaneClicked" onMouseMoved="#muestraPosicion" pannable="true" prefHeight="529.0" prefWidth="703.0" vbarPolicy="ALWAYS">
                <content>
-                  <Pane>
+                  <Pane onMouseDragged="#paneDragged" onMousePressed="#panePressed" onMouseReleased="#paneReleased">
                      <children>
                         <ImageView fitWidth="1500.0" pickOnBounds="true" preserveRatio="true">
                            <image>

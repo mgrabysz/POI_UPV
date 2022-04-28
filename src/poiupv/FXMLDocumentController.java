@@ -34,6 +34,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import poiupv.Poi;
@@ -78,6 +79,8 @@ public class FXMLDocumentController implements Initializable {
     private RadioMenuItem moverMenuButton;
     @FXML
     private RadioMenuItem seleccionarMenuButton;
+    @FXML
+    private RadioMenuItem lineaMenuButton;
 
     @FXML
     void zoomIn(ActionEvent event) {
@@ -131,7 +134,6 @@ public class FXMLDocumentController implements Initializable {
         selectedMark = null;
         
         colorPicker.setValue(Color.RED);
-
     }
 
     @FXML
@@ -159,7 +161,9 @@ public class FXMLDocumentController implements Initializable {
         
         if (marcarPuntoMenuButton.isSelected()) {
             marcarPunto(event);
-        } 
+        } else if (lineaMenuButton.isSelected()) {
+            
+        }
     }
     
     private void marcarPunto(MouseEvent event) {
@@ -272,6 +276,38 @@ public class FXMLDocumentController implements Initializable {
             selectedPoint.unselect();
             selectedMark = null;
         }
+    }
+
+    @FXML
+    private void lineaClicked(ActionEvent event) {
+    }
+
+   
+
+    private void initializeLine(MouseEvent event) {
+        Line line = new Line(event.getX(), event.getY(), event.getX(), event.getY());
+        zoomGroup.getChildren().add(line);
+        selectedMark = line;
+    }
+
+
+    @FXML
+    private void paneDragged(MouseEvent event) {
+        if (lineaMenuButton.isSelected()) {
+            Line line = (Line)selectedMark;
+            line.setEndX(event.getX());
+            line.setEndY(event.getY());
+            event.consume();
+        }
+    }
+
+    @FXML
+    private void paneReleased(MouseEvent event) {
+    }
+
+    @FXML
+    private void panePressed(MouseEvent event) {
+        initializeLine(event);
     }
 
 }
