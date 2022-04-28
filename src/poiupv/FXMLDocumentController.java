@@ -213,7 +213,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void paneDragged(MouseEvent event) {
         if (lineaMenuButton.isSelected()) {
-            Line line = (Line)drawingMark;
+            LineExtended line = (LineExtended)drawingMark;
             line.setEndX(event.getX());
             line.setEndY(event.getY());
             event.consume();
@@ -221,8 +221,8 @@ public class FXMLDocumentController implements Initializable {
     }
     @FXML
     private void paneReleased(MouseEvent event) {
-        if (drawingMark instanceof Line){
-            Line line = (Line)drawingMark;
+        if (drawingMark instanceof LineExtended){
+            LineExtended line = (LineExtended)drawingMark;
             finalizeLine(event, line);
             drawingMark = null;
         }
@@ -241,7 +241,7 @@ public class FXMLDocumentController implements Initializable {
         
         // blocking drawing line outside the scrollpane
         if (drawingMark instanceof Line){
-            Line drawingLine = (Line)drawingMark;
+            LineExtended drawingLine = (LineExtended)drawingMark;
             zoomGroup.getChildren().remove(drawingLine);
         }
     }
@@ -329,15 +329,16 @@ public class FXMLDocumentController implements Initializable {
     }
 
     private void initializeLine(MouseEvent event) {
-        Line line = new Line(event.getX(), event.getY(), event.getX(), event.getY());
+        double widthNormal = grosorSpinner.getValue();
+        double widthBig = Settings.LINE_STROKE_BIG;
+        LineExtended line = new LineExtended(event.getX(), event.getY(), event.getX(), event.getY(), widthNormal, widthBig);
         line.setStroke(colorPicker.getValue());
-        line.setStrokeWidth(grosorSpinner.getValue());
         
         zoomGroup.getChildren().add(line);
         drawingMark = line;
     }
     
-    private void finalizeLine(MouseEvent event, Line line) {
+    private void finalizeLine(MouseEvent event, LineExtended line) {
 
         // event handler for clicking on line
         EventHandler<MouseEvent> eventHandlerMouseClicked = new EventHandler<MouseEvent>() { 
@@ -364,14 +365,13 @@ public class FXMLDocumentController implements Initializable {
         EventHandler<MouseEvent> eventHandlerMouseEntered = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
                 if (seleccionarMenuButton.isSelected() || cambiarColorButton.isSelected()) {
-                    line.setStrokeWidth(Settings.LINE_STROKE_BIG);
+                    line.distinguish();
                 }
             }
         };
         EventHandler<MouseEvent> eventHandlerMouseExited = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
-                line.setStrokeWidth(Settings.LINE_STROKE_NORMAL);
-                
+                line.unselect();
             }
         };
         

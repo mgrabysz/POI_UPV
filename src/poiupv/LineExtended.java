@@ -19,8 +19,9 @@ public class LineExtended extends Line {
     
     private double widthNormal, widthBig;
     
-    public LineExtended(double widthNormal, double widthBig){
-        super();
+    public LineExtended(double x1, double y1, double x2, double y2, double widthNormal, double widthBig){
+        super(x1, y1, x2, y2);
+        this.setStrokeWidth(widthNormal);
         this.widthNormal = widthNormal;
         this.widthBig = widthBig;
     }
