@@ -48,7 +48,9 @@
                               <ToggleGroup fx:id="herramientasToggleGroup" />
                            </toggleGroup>
                         </RadioMenuItem>
-                        <RadioMenuItem fx:id="MoverMenuButton" mnemonicParsing="false" onAction="#MoverClicked" text="Mover" toggleGroup="$herramientasToggleGroup" />
+                        <RadioMenuItem fx:id="moverMenuButton" mnemonicParsing="false" onAction="#moverClicked" text="Mover" toggleGroup="$herramientasToggleGroup" />
+                        <RadioMenuItem fx:id="seleccionarMenuButton" mnemonicParsing="false" onAction="#seleccionarClicked" text="Seleccionar" toggleGroup="$herramientasToggleGroup" />
+                        <RadioMenuItem fx:id="cambiarColorButton" mnemonicParsing="false" onAction="#cambiarColorButtonClicked" text="Cambiar color" toggleGroup="$herramientasToggleGroup" />
                     </items>
                   </Menu>
               </menus>

@@ -68,12 +68,16 @@ public class FXMLDocumentController implements Initializable {
     private RadioMenuItem marcarPuntoMenuButton;
     @FXML
     private ToggleGroup herramientasToggleGroup;
-    @FXML
-    private RadioMenuItem MoverMenuButton;
     
     private Object selectedMark;
     @FXML
     private ColorPicker colorPicker;
+    @FXML
+    private RadioMenuItem cambiarColorButton;
+    @FXML
+    private RadioMenuItem moverMenuButton;
+    @FXML
+    private RadioMenuItem seleccionarMenuButton;
 
     @FXML
     void zoomIn(ActionEvent event) {
@@ -155,7 +159,7 @@ public class FXMLDocumentController implements Initializable {
         
         if (marcarPuntoMenuButton.isSelected()) {
             marcarPunto(event);
-        }
+        } 
     }
     
     private void marcarPunto(MouseEvent event) {
@@ -173,20 +177,26 @@ public class FXMLDocumentController implements Initializable {
         point.setCenterY(coordinates.getY());
         event.consume();
         
-        // event handler for selecting the circle
+        // event handler for clicking on point
         EventHandler<MouseEvent> eventHandlerMouseClicked = new EventHandler<MouseEvent>() { 
             @Override 
             public void handle(MouseEvent e) { 
                 
-                // unselect previously selected mark
-                if (selectedMark instanceof Point) {
-                    Point selectedPoint = (Point)selectedMark;
-                    selectedPoint.unselect();
+                if (cambiarColorButton.isSelected()){   // mode of color changing, no selection
+                    point.setFill(colorPicker.getValue());
+                } else if (seleccionarMenuButton.isSelected() || moverMenuButton.isSelected()) {    // selection
+                    
+                    // unselect previously selected mark
+                    if (selectedMark instanceof Point) {
+                        Point selectedPoint = (Point)selectedMark;
+                        selectedPoint.unselect();
+                    }
+
+                    // select new
+                    selectedMark = point;
+                    point.select();
+                    colorPicker.setValue((Color)point.getFill());
                 }
-                
-                // select new
-                selectedMark = point;
-                point.select();
             } 
         };  
         
@@ -215,9 +225,6 @@ public class FXMLDocumentController implements Initializable {
     private void marcarPuntoClicked(ActionEvent event) {
     }
 
-    @FXML
-    private void MoverClicked(ActionEvent event) {
-    }
 
     @FXML
     private void colorPickerClicked(ActionEvent event) {
@@ -248,6 +255,23 @@ public class FXMLDocumentController implements Initializable {
         
         Coordinates coordinates = new Coordinates(x, y);
         return coordinates;
+    }
+
+    @FXML
+    private void moverClicked(ActionEvent event) {
+    }
+
+    @FXML
+    private void seleccionarClicked(ActionEvent event) {
+    }
+
+    @FXML
+    private void cambiarColorButtonClicked(ActionEvent event) {
+        if (selectedMark instanceof Point) {
+            Point selectedPoint = (Point)selectedMark;
+            selectedPoint.unselect();
+            selectedMark = null;
+        }
     }
 
 }
