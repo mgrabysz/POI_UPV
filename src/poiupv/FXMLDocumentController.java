@@ -37,6 +37,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import poiupv.Poi;
+import poiupv.Point;
 
 /**
  *
@@ -70,7 +71,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private RadioMenuItem MoverMenuButton;
     
-    private Circle selectedMark;
+    private Point selectedMark;
     @FXML
     private ColorPicker colorPicker;
 
@@ -157,7 +158,9 @@ public class FXMLDocumentController implements Initializable {
         zoomGroup.getChildren().add(map_scrollpane.getContent());
         map_scrollpane.setContent(contentGroup);
         
-        selectedMark = new Circle();
+        selectedMark = new Point(1, 1);
+        
+        colorPicker.setValue(Color.RED);
 
     }
 
@@ -191,28 +194,17 @@ public class FXMLDocumentController implements Initializable {
     
     private void marcarPunto(MouseEvent event) {
         
-        Circle circlePainting = new Circle(Settings.RADIUS_NORMAL);
-        circlePainting.setStroke(Color.TRANSPARENT);
-        circlePainting.setStrokeWidth(2);
-        circlePainting.setFill(Color.RED);
+        Point point = new Point(Settings.RADIUS_NORMAL, Settings.RADIUS_BIG);
+        point.setStroke(Color.TRANSPARENT);
+        point.setStrokeWidth(3);
+        point.setFill(colorPicker.getValue());
+
+        zoomGroup.getChildren().add(point);
         
-        zoomGroup.getChildren().add(circlePainting);
-        
-        // parameters necessary for calculation of the coordinates
-        double scrollH = map_scrollpane.getHvalue();
-        double scrollV = map_scrollpane.getVvalue();
-        double mapWidth = zoomGroup.getBoundsInLocal().getWidth();
-        double mapHeight = zoomGroup.getBoundsInLocal().getHeight();
-        double zoomScale = zoom_slider.getValue();
-        Bounds viewportBounds = map_scrollpane.getViewportBounds();
-        
-        // find coordinates of top left corner of Viewport
-        double shiftX = (mapWidth - viewportBounds.getWidth() / zoomScale) * scrollH;
-        double shiftY = (mapHeight - viewportBounds.getHeight() / zoomScale) * scrollV;
-        
-        // draw a circle
-        circlePainting.setCenterX(event.getX() / zoomScale + shiftX);
-        circlePainting.setCenterY(event.getY() / zoomScale + shiftY);
+        // draw a point
+        Coordinates coordinates = calculateCoordinates(event.getX(), event.getY());
+        point.setCenterX(coordinates.getX());
+        point.setCenterY(coordinates.getY());
         event.consume();
         
         // event handler for selecting the circle
@@ -220,40 +212,34 @@ public class FXMLDocumentController implements Initializable {
             @Override 
             public void handle(MouseEvent e) { 
                 
-                // deselect previously selected
-                selectedMark.setStroke(Color.TRANSPARENT);
-                selectedMark.setRadius(Settings.RADIUS_NORMAL);
-                
+                // unselect previously selected
+                selectedMark.unselect();
                 
                 // select new
-                selectedMark = circlePainting;
-//                Color c = Color.web("0x0000FF");
-                System.out.println(selectedMark.getStrokeWidth());
-                selectedMark.setStroke(Color.ORANGE);
-                selectedMark.setRadius(Settings.RADIUS_BIG);
-                System.out.println("Selected point: " + selectedMark); 
+                selectedMark = point;
+                selectedMark.select();
             } 
         };  
         
         // event handlers for mouse enter and mouse exit
         EventHandler<MouseEvent> eventHandlerMouseEntered = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
-                circlePainting.setRadius(Settings.RADIUS_BIG);
+                point.setRadius(Settings.RADIUS_BIG);
             }
         };
         EventHandler<MouseEvent> eventHandlerMouseExited = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
-                if (circlePainting != selectedMark) {
-                    circlePainting.setRadius(Settings.RADIUS_NORMAL);
+                if (point != selectedMark) {
+                    point.setRadius(Settings.RADIUS_NORMAL);
                 }
                 
             }
         };
         
         //Registering the event filters
-        circlePainting.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandlerMouseClicked);
-        circlePainting.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandlerMouseEntered);
-        circlePainting.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandlerMouseExited);
+        point.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandlerMouseClicked);
+        point.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandlerMouseEntered);
+        point.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandlerMouseExited);
     }
 
     @FXML
@@ -266,6 +252,29 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void colorPickerClicked(ActionEvent event) {
+    }
+    
+    public Coordinates calculateCoordinates(double initialX, double initialY) {
+        /**
+         * Function takes coordinates on the scrollPane and calculates
+         * coordinates on map taking into account scrollPane shift and zoom
+         */
+        double scrollH = map_scrollpane.getHvalue();
+        double scrollV = map_scrollpane.getVvalue();
+        double mapWidth = zoomGroup.getBoundsInLocal().getWidth();
+        double mapHeight = zoomGroup.getBoundsInLocal().getHeight();
+        double zoomScale = zoom_slider.getValue();
+        Bounds viewportBounds = map_scrollpane.getViewportBounds();
+        
+        // find coordinates of top left corner of Viewport
+        double shiftX = (mapWidth - viewportBounds.getWidth() / zoomScale) * scrollH;
+        double shiftY = (mapHeight - viewportBounds.getHeight() / zoomScale) * scrollV;
+        
+        double x = initialX / zoomScale + shiftX;
+        double y = initialY / zoomScale + shiftY;
+        
+        Coordinates coordinates = new Coordinates(x, y);
+        return coordinates;
     }
 
 }

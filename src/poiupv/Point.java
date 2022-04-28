@@ -5,6 +5,7 @@
  */
 package poiupv;
 
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 /**
@@ -13,7 +14,30 @@ import javafx.scene.shape.Circle;
  */
 public class Point extends Circle {
     
+    /**
+     * Class represents point which can be drawn on a map
+     * Attributes
+     * radiusBig : double
+     *      radius when point is selected
+     * radiusNormal : double
+     *      radius when point is not selected
+     */
+    
+    private double radiusBig, radiusNormal;
+    
+    public Point(double radiusNormal, double radiusBig) {
+        super(radiusNormal);
+        this.radiusNormal = radiusNormal;
+        this.radiusBig = radiusBig;
+    }
+    
     public void select() {
-        
+        this.setStroke(Color.ORANGE);
+        this.setRadius(Settings.RADIUS_BIG);
+    }
+    
+    public void unselect() {
+        this.setStroke(Color.TRANSPARENT);
+        this.setRadius(radiusNormal);
     }
 }
