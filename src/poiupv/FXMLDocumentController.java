@@ -21,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
@@ -31,6 +32,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -50,7 +52,6 @@ public class FXMLDocumentController implements Initializable {
     // el escalado se realiza sobre este nodo, al escalar el Group no mueve sus nodos
     private Group zoomGroup;
 
-    @FXML
     private ListView<Poi> map_listview;
     @FXML
     private ScrollPane map_scrollpane;
@@ -70,6 +71,8 @@ public class FXMLDocumentController implements Initializable {
     private RadioMenuItem MoverMenuButton;
     
     private Circle selectedMark;
+    @FXML
+    private ColorPicker colorPicker;
 
     @FXML
     void zoomIn(ActionEvent event) {
@@ -102,43 +105,42 @@ public class FXMLDocumentController implements Initializable {
         map_scrollpane.setVvalue(scrollV);
     }
 
-    @FXML
-    void listClicked(MouseEvent event) {
-        Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
+//    void listClicked(MouseEvent event) {
+//        Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
+//
+//        // Animación del scroll hasta la posicion del item seleccionado
+//        double mapWidth = zoomGroup.getBoundsInLocal().getWidth();
+//        double mapHeight = zoomGroup.getBoundsInLocal().getHeight();
+//        double scrollH = itemSelected.getPosition().getX() / mapWidth;
+//        double scrollV = itemSelected.getPosition().getY() / mapHeight;
+//        
+//        final Timeline timeline = new Timeline();
+//        final KeyValue kv1 = new KeyValue(map_scrollpane.hvalueProperty(), scrollH);
+//        final KeyValue kv2 = new KeyValue(map_scrollpane.vvalueProperty(), scrollV);
+//        final KeyFrame kf = new KeyFrame(Duration.millis(500), kv1, kv2);
+//        timeline.getKeyFrames().add(kf);
+//        timeline.play();
+//
+//        // movemos el objto map_pin hasta la posicion del POI
+//        double pinW = map_pin.getBoundsInLocal().getWidth();
+//        double pinH = map_pin.getBoundsInLocal().getHeight();
+//        map_pin.setLayoutX(itemSelected.getPosition().getX());
+//        map_pin.setLayoutY(itemSelected.getPosition().getY());
+//        pin_info.setText(itemSelected.getDescription());
+//        map_pin.setVisible(true);
+//    }
 
-        // Animación del scroll hasta la posicion del item seleccionado
-        double mapWidth = zoomGroup.getBoundsInLocal().getWidth();
-        double mapHeight = zoomGroup.getBoundsInLocal().getHeight();
-        double scrollH = itemSelected.getPosition().getX() / mapWidth;
-        double scrollV = itemSelected.getPosition().getY() / mapHeight;
-        
-        final Timeline timeline = new Timeline();
-        final KeyValue kv1 = new KeyValue(map_scrollpane.hvalueProperty(), scrollH);
-        final KeyValue kv2 = new KeyValue(map_scrollpane.vvalueProperty(), scrollV);
-        final KeyFrame kf = new KeyFrame(Duration.millis(500), kv1, kv2);
-        timeline.getKeyFrames().add(kf);
-        timeline.play();
-
-        // movemos el objto map_pin hasta la posicion del POI
-        double pinW = map_pin.getBoundsInLocal().getWidth();
-        double pinH = map_pin.getBoundsInLocal().getHeight();
-        map_pin.setLayoutX(itemSelected.getPosition().getX());
-        map_pin.setLayoutY(itemSelected.getPosition().getY());
-        pin_info.setText(itemSelected.getDescription());
-        map_pin.setVisible(true);
-    }
-
-    private void initData() {
-        hm.put("2F", new Poi("2F", "Edificion del DSIC", 325, 225));
-        hm.put("Agora", new Poi("Agora", "Agora", 600, 360));
-        map_listview.getItems().add(hm.get("2F"));
-        map_listview.getItems().add(hm.get("Agora"));
-    }
+//    private void initData() {
+//        hm.put("2F", new Poi("2F", "Edificion del DSIC", 325, 225));
+//        hm.put("Agora", new Poi("Agora", "Agora", 600, 360));
+//        map_listview.getItems().add(hm.get("2F"));
+//        map_listview.getItems().add(hm.get("Agora"));
+//    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        initData();
+//        initData();
         //==========================================================
         // inicializamos el slider y enlazamos con el zoom
         zoom_slider.setMin(0.5);
@@ -154,6 +156,8 @@ public class FXMLDocumentController implements Initializable {
         contentGroup.getChildren().add(zoomGroup);
         zoomGroup.getChildren().add(map_scrollpane.getContent());
         map_scrollpane.setContent(contentGroup);
+        
+        selectedMark = new Circle();
 
     }
 
@@ -187,8 +191,9 @@ public class FXMLDocumentController implements Initializable {
     
     private void marcarPunto(MouseEvent event) {
         
-        Circle circlePainting = new Circle(3);
-        circlePainting.setStroke(Color.RED);
+        Circle circlePainting = new Circle(Settings.RADIUS_NORMAL);
+        circlePainting.setStroke(Color.TRANSPARENT);
+        circlePainting.setStrokeWidth(2);
         circlePainting.setFill(Color.RED);
         
         zoomGroup.getChildren().add(circlePainting);
@@ -211,16 +216,44 @@ public class FXMLDocumentController implements Initializable {
         event.consume();
         
         // event handler for selecting the circle
-        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() { 
+        EventHandler<MouseEvent> eventHandlerMouseClicked = new EventHandler<MouseEvent>() { 
             @Override 
             public void handle(MouseEvent e) { 
+                
+                // deselect previously selected
+                selectedMark.setStroke(Color.TRANSPARENT);
+                selectedMark.setRadius(Settings.RADIUS_NORMAL);
+                
+                
+                // select new
                 selectedMark = circlePainting;
+//                Color c = Color.web("0x0000FF");
+                System.out.println(selectedMark.getStrokeWidth());
+                selectedMark.setStroke(Color.ORANGE);
+                selectedMark.setRadius(Settings.RADIUS_BIG);
                 System.out.println("Selected point: " + selectedMark); 
             } 
         };  
         
-        //Registering the event filter 
-        circlePainting.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+        // event handlers for mouse enter and mouse exit
+        EventHandler<MouseEvent> eventHandlerMouseEntered = new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent e) {
+                circlePainting.setRadius(Settings.RADIUS_BIG);
+            }
+        };
+        EventHandler<MouseEvent> eventHandlerMouseExited = new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent e) {
+                if (circlePainting != selectedMark) {
+                    circlePainting.setRadius(Settings.RADIUS_NORMAL);
+                }
+                
+            }
+        };
+        
+        //Registering the event filters
+        circlePainting.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandlerMouseClicked);
+        circlePainting.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandlerMouseEntered);
+        circlePainting.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandlerMouseExited);
     }
 
     @FXML
@@ -229,6 +262,10 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void MoverClicked(ActionEvent event) {
+    }
+
+    @FXML
+    private void colorPickerClicked(ActionEvent event) {
     }
 
 }
