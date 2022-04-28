@@ -71,7 +71,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private RadioMenuItem MoverMenuButton;
     
-    private Point selectedMark;
+    private Object selectedMark;
     @FXML
     private ColorPicker colorPicker;
 
@@ -124,7 +124,7 @@ public class FXMLDocumentController implements Initializable {
         zoomGroup.getChildren().add(map_scrollpane.getContent());
         map_scrollpane.setContent(contentGroup);
         
-        selectedMark = new Point(1, 1);
+        selectedMark = null;
         
         colorPicker.setValue(Color.RED);
 
@@ -178,12 +178,15 @@ public class FXMLDocumentController implements Initializable {
             @Override 
             public void handle(MouseEvent e) { 
                 
-                // unselect previously selected
-                selectedMark.unselect();
+                // unselect previously selected mark
+                if (selectedMark instanceof Point) {
+                    Point selectedPoint = (Point)selectedMark;
+                    selectedPoint.unselect();
+                }
                 
                 // select new
                 selectedMark = point;
-                selectedMark.select();
+                point.select();
             } 
         };  
         
@@ -218,6 +221,10 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void colorPickerClicked(ActionEvent event) {
+        if (selectedMark instanceof Point) {
+            Point selectedPoint = (Point)selectedMark;
+            selectedPoint.setFill(colorPicker.getValue());
+            }
     }
     
     public Coordinates calculateCoordinates(double initialX, double initialY) {
