@@ -106,43 +106,9 @@ public class FXMLDocumentController implements Initializable {
         map_scrollpane.setVvalue(scrollV);
     }
 
-//    void listClicked(MouseEvent event) {
-//        Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
-//
-//        // Animación del scroll hasta la posicion del item seleccionado
-//        double mapWidth = zoomGroup.getBoundsInLocal().getWidth();
-//        double mapHeight = zoomGroup.getBoundsInLocal().getHeight();
-//        double scrollH = itemSelected.getPosition().getX() / mapWidth;
-//        double scrollV = itemSelected.getPosition().getY() / mapHeight;
-//        
-//        final Timeline timeline = new Timeline();
-//        final KeyValue kv1 = new KeyValue(map_scrollpane.hvalueProperty(), scrollH);
-//        final KeyValue kv2 = new KeyValue(map_scrollpane.vvalueProperty(), scrollV);
-//        final KeyFrame kf = new KeyFrame(Duration.millis(500), kv1, kv2);
-//        timeline.getKeyFrames().add(kf);
-//        timeline.play();
-//
-//        // movemos el objto map_pin hasta la posicion del POI
-//        double pinW = map_pin.getBoundsInLocal().getWidth();
-//        double pinH = map_pin.getBoundsInLocal().getHeight();
-//        map_pin.setLayoutX(itemSelected.getPosition().getX());
-//        map_pin.setLayoutY(itemSelected.getPosition().getY());
-//        pin_info.setText(itemSelected.getDescription());
-//        map_pin.setVisible(true);
-//    }
-
-//    private void initData() {
-//        hm.put("2F", new Poi("2F", "Edificion del DSIC", 325, 225));
-//        hm.put("Agora", new Poi("Agora", "Agora", 600, 360));
-//        map_listview.getItems().add(hm.get("2F"));
-//        map_listview.getItems().add(hm.get("Agora"));
-//    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-//        initData();
-        //==========================================================
         // inicializamos el slider y enlazamos con el zoom
         zoom_slider.setMin(0.5);
         zoom_slider.setMax(1.5);

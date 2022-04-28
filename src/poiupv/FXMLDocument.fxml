@@ -63,7 +63,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </HBox>
-      <HBox prefHeight="539.0" prefWidth="900.0">
+      <HBox prefHeight="1000.0" prefWidth="1000.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="529.0" prefWidth="157.0">
                <children>
@@ -97,7 +97,7 @@
             </ScrollPane>
          </children>
       </HBox>
-      <HBox alignment="CENTER_RIGHT">
+      <HBox alignment="CENTER_RIGHT" fillHeight="false" prefHeight="40.0">
          <children>
             <Label fx:id="posicion" minHeight="-Infinity" minWidth="-Infinity" text="SceneX:     ScenY:     " wrapText="true" HBox.hgrow="ALWAYS" />
          </children>
