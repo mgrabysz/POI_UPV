@@ -31,6 +31,8 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
@@ -190,6 +192,12 @@ public class FXMLDocumentController implements Initializable {
     
     // =============== Event handlers =================
     @FXML
+    private void panePressed(MouseEvent event) {
+        if (lineaMenuButton.isSelected()){
+            initializeLine(event);
+        }
+    }
+    @FXML
     private void paneDragged(MouseEvent event) {
         if (lineaMenuButton.isSelected()) {
             Line line = (Line)drawingMark;
@@ -200,19 +208,27 @@ public class FXMLDocumentController implements Initializable {
     }
     @FXML
     private void paneReleased(MouseEvent event) {
-    }
-    @FXML
-    private void panePressed(MouseEvent event) {
         if (lineaMenuButton.isSelected()){
-            initializeLine(event);
+            drawingMark = null;
         }
     }
+    
     @FXML
     private void paneClicked(MouseEvent event) {
         if (marcarPuntoMenuButton.isSelected()) {
             marcarPunto(event);
         }
         
+    }
+    
+    @FXML
+    private void scrollPaneMouseExited(MouseEvent event) {
+        
+        // blocking drawing line outside the scrollpane
+        if (drawingMark instanceof Line){
+            Line drawingLine = (Line)drawingMark;
+            zoomGroup.getChildren().remove(drawingLine);
+        }
     }
 
     // ========== Additional functions ============
@@ -305,4 +321,5 @@ public class FXMLDocumentController implements Initializable {
         zoomGroup.getChildren().add(line);
         drawingMark = line;
     }
+
 }

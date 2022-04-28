@@ -76,7 +76,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </padding>
             </VBox>
-            <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" onMouseMoved="#muestraPosicion" pannable="true" prefHeight="529.0" prefWidth="703.0" vbarPolicy="ALWAYS">
+            <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" onMouseExited="#scrollPaneMouseExited" onMouseMoved="#muestraPosicion" pannable="true" prefHeight="529.0" prefWidth="703.0" vbarPolicy="ALWAYS">
                <content>
                   <Pane onMouseClicked="#paneClicked" onMouseDragged="#paneDragged" onMousePressed="#panePressed" onMouseReleased="#paneReleased">
                      <children>
