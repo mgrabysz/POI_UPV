@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
@@ -70,7 +71,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ToggleGroup herramientasToggleGroup;
     
-    private Object selectedMark;
+    private Object selectedMark, drawingMark;
     @FXML
     private ColorPicker colorPicker;
     @FXML
@@ -131,7 +132,8 @@ public class FXMLDocumentController implements Initializable {
         zoomGroup.getChildren().add(map_scrollpane.getContent());
         map_scrollpane.setContent(contentGroup);
         
-        selectedMark = null;
+        selectedMark = null;    // mark which is selected (point, circle, line)
+        drawingMark = null;     // mark which is currently being drawn
         
         colorPicker.setValue(Color.RED);
     }
@@ -156,15 +158,64 @@ public class FXMLDocumentController implements Initializable {
     }
 
     // ============== Practica ================
+   
+    // ============== Tools buttons ===========
     @FXML
-    private void ScrollPaneClicked(MouseEvent event) {
-        
-        if (marcarPuntoMenuButton.isSelected()) {
-            marcarPunto(event);
-        } else if (lineaMenuButton.isSelected()) {
-            
+    private void marcarPuntoClicked(ActionEvent event) {
+    }
+    @FXML
+    private void moverClicked(ActionEvent event) {
+    }
+    @FXML
+    private void seleccionarClicked(ActionEvent event) {
+    }
+    @FXML
+    private void cambiarColorButtonClicked(ActionEvent event) {
+        if (selectedMark instanceof Point) {
+            Point selectedPoint = (Point)selectedMark;
+            selectedPoint.unselect();
+            selectedMark = null;
         }
     }
+    @FXML
+    private void lineaClicked(ActionEvent event) {
+    }
+    @FXML
+    private void colorPickerClicked(ActionEvent event) {
+        if (selectedMark instanceof Point) {
+            Point selectedPoint = (Point)selectedMark;
+            selectedPoint.setFill(colorPicker.getValue());
+            }
+    }
+    
+    // =============== Event handlers =================
+    @FXML
+    private void paneDragged(MouseEvent event) {
+        if (lineaMenuButton.isSelected()) {
+            Line line = (Line)drawingMark;
+            line.setEndX(event.getX());
+            line.setEndY(event.getY());
+            event.consume();
+        }
+    }
+    @FXML
+    private void paneReleased(MouseEvent event) {
+    }
+    @FXML
+    private void panePressed(MouseEvent event) {
+        if (lineaMenuButton.isSelected()){
+            initializeLine(event);
+        }
+    }
+    @FXML
+    private void paneClicked(MouseEvent event) {
+        if (marcarPuntoMenuButton.isSelected()) {
+            marcarPunto(event);
+        }
+        
+    }
+
+    // ========== Additional functions ============
     
     private void marcarPunto(MouseEvent event) {
         
@@ -176,9 +227,8 @@ public class FXMLDocumentController implements Initializable {
         zoomGroup.getChildren().add(point);
         
         // draw a point
-        Coordinates coordinates = calculateCoordinates(event.getX(), event.getY());
-        point.setCenterX(coordinates.getX());
-        point.setCenterY(coordinates.getY());
+        point.setCenterX(event.getX());
+        point.setCenterY(event.getY());
         event.consume();
         
         // event handler for clicking on point
@@ -225,19 +275,6 @@ public class FXMLDocumentController implements Initializable {
         point.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandlerMouseExited);
     }
 
-    @FXML
-    private void marcarPuntoClicked(ActionEvent event) {
-    }
-
-
-    @FXML
-    private void colorPickerClicked(ActionEvent event) {
-        if (selectedMark instanceof Point) {
-            Point selectedPoint = (Point)selectedMark;
-            selectedPoint.setFill(colorPicker.getValue());
-            }
-    }
-    
     public Coordinates calculateCoordinates(double initialX, double initialY) {
         /**
          * Function takes coordinates on the scrollPane and calculates
@@ -261,53 +298,11 @@ public class FXMLDocumentController implements Initializable {
         return coordinates;
     }
 
-    @FXML
-    private void moverClicked(ActionEvent event) {
-    }
-
-    @FXML
-    private void seleccionarClicked(ActionEvent event) {
-    }
-
-    @FXML
-    private void cambiarColorButtonClicked(ActionEvent event) {
-        if (selectedMark instanceof Point) {
-            Point selectedPoint = (Point)selectedMark;
-            selectedPoint.unselect();
-            selectedMark = null;
-        }
-    }
-
-    @FXML
-    private void lineaClicked(ActionEvent event) {
-    }
-
-   
-
     private void initializeLine(MouseEvent event) {
         Line line = new Line(event.getX(), event.getY(), event.getX(), event.getY());
+        line.setStroke(colorPicker.getValue());
+        
         zoomGroup.getChildren().add(line);
-        selectedMark = line;
+        drawingMark = line;
     }
-
-
-    @FXML
-    private void paneDragged(MouseEvent event) {
-        if (lineaMenuButton.isSelected()) {
-            Line line = (Line)selectedMark;
-            line.setEndX(event.getX());
-            line.setEndY(event.getY());
-            event.consume();
-        }
-    }
-
-    @FXML
-    private void paneReleased(MouseEvent event) {
-    }
-
-    @FXML
-    private void panePressed(MouseEvent event) {
-        initializeLine(event);
-    }
-
 }
