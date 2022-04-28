@@ -5,6 +5,7 @@
  */
 package poiupv;
 
+import javafx.scene.control.ColorPicker;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -31,9 +32,10 @@ public class Point extends Circle {
         this.radiusBig = radiusBig;
     }
     
-    public void select() {
+    public void select(ColorPicker picker) {
         this.setStroke(Color.ORANGE);
         this.setRadius(Settings.RADIUS_BIG);
+        picker.setValue((Color)this.getFill());
     }
     
     public void unselect() {

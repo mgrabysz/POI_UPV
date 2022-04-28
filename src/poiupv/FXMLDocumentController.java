@@ -30,6 +30,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseDragEvent;
@@ -84,6 +86,10 @@ public class FXMLDocumentController implements Initializable {
     private RadioMenuItem seleccionarMenuButton;
     @FXML
     private RadioMenuItem lineaMenuButton;
+    @FXML
+    private Label grosorLabel;
+    @FXML
+    private Spinner<Double> grosorSpinner;
 
     @FXML
     void zoomIn(ActionEvent event) {
@@ -138,6 +144,13 @@ public class FXMLDocumentController implements Initializable {
         drawingMark = null;     // mark which is currently being drawn
         
         colorPicker.setValue(Color.RED);
+        
+        // arguments(min, max, initialValue, amountToStepBy)
+        double d = Settings.LINE_STROKE_NORMAL;
+        SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 10, d, 1);
+        grosorSpinner.setValueFactory(valueFactory);
+        
+        grosorSpinner.disableProperty().bind(lineaMenuButton.selectedProperty().not());
     }
 
     @FXML
@@ -208,7 +221,9 @@ public class FXMLDocumentController implements Initializable {
     }
     @FXML
     private void paneReleased(MouseEvent event) {
-        if (lineaMenuButton.isSelected()){
+        if (drawingMark instanceof Line){
+            Line line = (Line)drawingMark;
+            finalizeLine(event, line);
             drawingMark = null;
         }
     }
@@ -264,8 +279,7 @@ public class FXMLDocumentController implements Initializable {
 
                     // select new
                     selectedMark = point;
-                    point.select();
-                    colorPicker.setValue((Color)point.getFill());
+                    point.select(colorPicker);
                 }
             } 
         };  
@@ -317,9 +331,54 @@ public class FXMLDocumentController implements Initializable {
     private void initializeLine(MouseEvent event) {
         Line line = new Line(event.getX(), event.getY(), event.getX(), event.getY());
         line.setStroke(colorPicker.getValue());
+        line.setStrokeWidth(grosorSpinner.getValue());
         
         zoomGroup.getChildren().add(line);
         drawingMark = line;
+    }
+    
+    private void finalizeLine(MouseEvent event, Line line) {
+
+        // event handler for clicking on line
+        EventHandler<MouseEvent> eventHandlerMouseClicked = new EventHandler<MouseEvent>() { 
+            @Override 
+            public void handle(MouseEvent e) { 
+                
+                if (cambiarColorButton.isSelected()){   // mode of color changing, no selection
+                    line.setStroke(colorPicker.getValue());
+                } else if (seleccionarMenuButton.isSelected() || moverMenuButton.isSelected()) {    // selection
+                    
+                    // unselect previously selected mark
+                    if (selectedMark instanceof Point) {
+                        Point selectedPoint = (Point)selectedMark;
+                        selectedPoint.unselect();
+                    }
+
+                    // select new
+                    colorPicker.setValue((Color)line.getStroke());
+                }
+            } 
+        };  
+        
+        // event handlers for mouse enter and mouse exit
+        EventHandler<MouseEvent> eventHandlerMouseEntered = new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent e) {
+                if (seleccionarMenuButton.isSelected() || cambiarColorButton.isSelected()) {
+                    line.setStrokeWidth(Settings.LINE_STROKE_BIG);
+                }
+            }
+        };
+        EventHandler<MouseEvent> eventHandlerMouseExited = new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent e) {
+                line.setStrokeWidth(Settings.LINE_STROKE_NORMAL);
+                
+            }
+        };
+        
+        //Registering the event filters
+        line.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandlerMouseClicked);
+        line.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandlerMouseEntered);
+        line.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandlerMouseExited);
     }
 
 }

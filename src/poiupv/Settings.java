@@ -13,4 +13,7 @@ public class Settings {
     public static int RADIUS_NORMAL = 5;
     public static int RADIUS_BIG = 8;
     
+    public static double LINE_STROKE_NORMAL = 3;
+    public static double LINE_STROKE_BIG = 10;
+    
 }
