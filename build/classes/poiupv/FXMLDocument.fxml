@@ -77,9 +77,9 @@
                <content>
                   <Pane>
                      <children>
-                        <ImageView pickOnBounds="true">
+                        <ImageView fitWidth="1500.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../resources/upv.jpg" />
+                              <Image url="@../recursos_entrega/resources/carta_nautica.jpg" />
                            </image>
                         </ImageView>
                         <MenuButton fx:id="map_pin" mnemonicParsing="false" prefHeight="60.0" prefWidth="48.0" visible="false">
