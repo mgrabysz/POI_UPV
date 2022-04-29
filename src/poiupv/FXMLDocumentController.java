@@ -81,8 +81,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private RadioMenuItem cambiarColorButton;
     @FXML
-    private RadioMenuItem moverMenuButton;
-    @FXML
     private RadioMenuItem seleccionarMenuButton;
     @FXML
     private RadioMenuItem lineaMenuButton;
@@ -92,6 +90,8 @@ public class FXMLDocumentController implements Initializable {
     private Spinner<Double> grosorSpinner;
     
     public Tool tool;
+    @FXML
+    private RadioMenuItem circuloMenuButton;
 
     @FXML
     void zoomIn(ActionEvent event) {
@@ -149,7 +149,7 @@ public class FXMLDocumentController implements Initializable {
         
         // arguments(min, max, initialValue, amountToStepBy)
         double d = Settings.LINE_STROKE_NORMAL;
-        SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 10, d, 1);
+        SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
         grosorSpinner.setValueFactory(valueFactory);
         
         grosorSpinner.disableProperty().bind(lineaMenuButton.selectedProperty().not());
@@ -191,13 +191,10 @@ public class FXMLDocumentController implements Initializable {
         selectedMark = mark;
     }
     
-    // ============== Tools buttons ===========
+    // ============== Tools buttons ======================
     @FXML
     private void marcarPuntoClicked(ActionEvent event) {
         tool = Tool.MARK_POINT;
-    }
-    @FXML
-    private void moverClicked(ActionEvent event) {
     }
     @FXML
     private void seleccionarClicked(ActionEvent event) {
@@ -217,6 +214,11 @@ public class FXMLDocumentController implements Initializable {
         tool = Tool.DRAW_LINE;
     }
     @FXML
+    private void circuloMenuButtonClicked(ActionEvent event) {
+        tool = Tool.DRAW_CIRCLE;
+    }
+    
+    @FXML
     private void colorPickerClicked(ActionEvent event) {
         if (selectedMark instanceof Point) {
             Point selectedPoint = (Point)selectedMark;
@@ -227,16 +229,23 @@ public class FXMLDocumentController implements Initializable {
     // =============== Event handlers =================
     @FXML
     private void panePressed(MouseEvent event) {
-        if (lineaMenuButton.isSelected()){
+        if (tool == Tool.DRAW_LINE){
             initializeLine(event);
+        } else if (tool == Tool.DRAW_CIRCLE) {
+            initializeCircle(event);
         }
     }
     @FXML
     private void paneDragged(MouseEvent event) {
-        if (lineaMenuButton.isSelected()) {
+        if (tool == Tool.DRAW_LINE) {
             LineExtended line = (LineExtended)drawingMark;
             line.setEndX(event.getX());
             line.setEndY(event.getY());
+            event.consume();
+        } else if (tool == Tool.DRAW_CIRCLE) {
+            CircleExtended circle = (CircleExtended)drawingMark;
+            double radius = Math.abs(event.getX() - circle.getInitialX());
+            circle.setRadius(radius);
             event.consume();
         }
     }
@@ -289,5 +298,16 @@ public class FXMLDocumentController implements Initializable {
         zoomGroup.getChildren().add(line);
         drawingMark = line;
     }
+
+    private void initializeCircle(MouseEvent event) {
+        double widthNormal = grosorSpinner.getValue();
+        double widthBig = Settings.LINE_STROKE_BIG;
+        CircleExtended circle = new CircleExtended(event.getX(), event.getY(), widthNormal, widthBig, this);
+        
+        zoomGroup.getChildren().add(circle);
+        drawingMark = circle;
+    }
+
+    
     
 }

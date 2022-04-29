@@ -51,8 +51,8 @@
                            </toggleGroup>
                         </RadioMenuItem>
                         <RadioMenuItem fx:id="lineaMenuButton" mnemonicParsing="false" onAction="#lineaClicked" text="Pintar línea" toggleGroup="$herramientasToggleGroup" />
-                        <RadioMenuItem fx:id="moverMenuButton" mnemonicParsing="false" onAction="#moverClicked" text="Mover" toggleGroup="$herramientasToggleGroup" />
-                        <RadioMenuItem fx:id="seleccionarMenuButton" mnemonicParsing="false" onAction="#seleccionarClicked" text="Seleccionar" toggleGroup="$herramientasToggleGroup" />
+                        <RadioMenuItem fx:id="circuloMenuButton" mnemonicParsing="false" onAction="#circuloMenuButtonClicked" text="Pintar circulo" toggleGroup="$herramientasToggleGroup" />
+                        <RadioMenuItem fx:id="seleccionarMenuButton" mnemonicParsing="false" onAction="#seleccionarClicked" text="Seleccionar color" toggleGroup="$herramientasToggleGroup" />
                         <RadioMenuItem fx:id="cambiarColorButton" mnemonicParsing="false" onAction="#cambiarColorButtonClicked" text="Cambiar color" toggleGroup="$herramientasToggleGroup" />
                     </items>
                   </Menu>

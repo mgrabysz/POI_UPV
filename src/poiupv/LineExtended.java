@@ -19,7 +19,7 @@ import javafx.scene.shape.Line;
 public class LineExtended extends Line {
     
     private final double widthNormal, widthBig;
-    private FXMLDocumentController controller;
+    private final FXMLDocumentController controller;
     
     public LineExtended(double x1, double y1, double x2, double y2, double widthNormal, double widthBig, FXMLDocumentController controller){
         super(x1, y1, x2, y2);
