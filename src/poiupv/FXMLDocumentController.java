@@ -90,6 +90,8 @@ public class FXMLDocumentController implements Initializable {
     private Label grosorLabel;
     @FXML
     private Spinner<Double> grosorSpinner;
+    
+    public Tool tool;
 
     @FXML
     void zoomIn(ActionEvent event) {
@@ -151,6 +153,9 @@ public class FXMLDocumentController implements Initializable {
         grosorSpinner.setValueFactory(valueFactory);
         
         grosorSpinner.disableProperty().bind(lineaMenuButton.selectedProperty().not());
+        
+        seleccionarMenuButton.setSelected(true);
+        tool = Tool.SELECTION;
     }
 
     @FXML
@@ -173,19 +178,31 @@ public class FXMLDocumentController implements Initializable {
     }
 
     // ============== Practica ================
-   
+    
+    // ============== Pseudo getters =================
+    
+    public ColorPicker getColorPicker() {
+        return colorPicker;
+    }
+    public Object getSelectedMark() {
+        return selectedMark;
+    }
+    
     // ============== Tools buttons ===========
     @FXML
     private void marcarPuntoClicked(ActionEvent event) {
+        tool = Tool.MARK_POINT;
     }
     @FXML
     private void moverClicked(ActionEvent event) {
     }
     @FXML
     private void seleccionarClicked(ActionEvent event) {
+        tool = Tool.SELECTION;
     }
     @FXML
     private void cambiarColorButtonClicked(ActionEvent event) {
+        tool = Tool.CHANGE_COLOR;
         if (selectedMark instanceof Point) {
             Point selectedPoint = (Point)selectedMark;
             selectedPoint.unselect();
@@ -194,6 +211,7 @@ public class FXMLDocumentController implements Initializable {
     }
     @FXML
     private void lineaClicked(ActionEvent event) {
+        tool = Tool.DRAW_LINE;
     }
     @FXML
     private void colorPickerClicked(ActionEvent event) {
@@ -223,7 +241,7 @@ public class FXMLDocumentController implements Initializable {
     private void paneReleased(MouseEvent event) {
         if (drawingMark instanceof LineExtended){
             LineExtended line = (LineExtended)drawingMark;
-            finalizeLine(event, line);
+            line.initializeHandlers();
             drawingMark = null;
         }
     }
@@ -233,7 +251,6 @@ public class FXMLDocumentController implements Initializable {
         if (marcarPuntoMenuButton.isSelected()) {
             marcarPunto(event);
         }
-        
     }
     
     @FXML
@@ -267,9 +284,9 @@ public class FXMLDocumentController implements Initializable {
             @Override 
             public void handle(MouseEvent e) { 
                 
-                if (cambiarColorButton.isSelected()){   // mode of color changing, no selection
+                if (tool == Tool.CHANGE_COLOR){   // mode of color changing, no selection
                     point.setFill(colorPicker.getValue());
-                } else if (seleccionarMenuButton.isSelected() || moverMenuButton.isSelected()) {    // selection
+                } else if (tool == Tool.SELECTION) {    // selection
                     
                     // unselect previously selected mark
                     if (selectedMark instanceof Point) {
@@ -280,7 +297,8 @@ public class FXMLDocumentController implements Initializable {
                     // select new
                     selectedMark = point;
                     point.select(colorPicker);
-                }
+                    
+                } 
             } 
         };  
         
@@ -305,80 +323,19 @@ public class FXMLDocumentController implements Initializable {
         point.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandlerMouseExited);
     }
 
-    public Coordinates calculateCoordinates(double initialX, double initialY) {
-        /**
-         * Function takes coordinates on the scrollPane and calculates
-         * coordinates on map taking into account scrollPane shift and zoom
-         */
-        double scrollH = map_scrollpane.getHvalue();
-        double scrollV = map_scrollpane.getVvalue();
-        double mapWidth = zoomGroup.getBoundsInLocal().getWidth();
-        double mapHeight = zoomGroup.getBoundsInLocal().getHeight();
-        double zoomScale = zoom_slider.getValue();
-        Bounds viewportBounds = map_scrollpane.getViewportBounds();
-        
-        // find coordinates of top left corner of Viewport
-        double shiftX = (mapWidth - viewportBounds.getWidth() / zoomScale) * scrollH;
-        double shiftY = (mapHeight - viewportBounds.getHeight() / zoomScale) * scrollV;
-        
-        double x = initialX / zoomScale + shiftX;
-        double y = initialY / zoomScale + shiftY;
-        
-        Coordinates coordinates = new Coordinates(x, y);
-        return coordinates;
-    }
-
     private void initializeLine(MouseEvent event) {
         double widthNormal = grosorSpinner.getValue();
         double widthBig = Settings.LINE_STROKE_BIG;
-        LineExtended line = new LineExtended(event.getX(), event.getY(), event.getX(), event.getY(), widthNormal, widthBig);
-        line.setStroke(colorPicker.getValue());
+        LineExtended line = new LineExtended(event.getX(), event.getY(), event.getX(), event.getY(), widthNormal, widthBig, this);
         
         zoomGroup.getChildren().add(line);
         drawingMark = line;
     }
     
-    private void finalizeLine(MouseEvent event, LineExtended line) {
 
-        // event handler for clicking on line
-        EventHandler<MouseEvent> eventHandlerMouseClicked = new EventHandler<MouseEvent>() { 
-            @Override 
-            public void handle(MouseEvent e) { 
-                
-                if (cambiarColorButton.isSelected()){   // mode of color changing, no selection
-                    line.setStroke(colorPicker.getValue());
-                } else if (seleccionarMenuButton.isSelected() || moverMenuButton.isSelected()) {    // selection
-                    
-                    // unselect previously selected mark
-                    if (selectedMark instanceof Point) {
-                        Point selectedPoint = (Point)selectedMark;
-                        selectedPoint.unselect();
-                    }
-
-                    // select new
-                    colorPicker.setValue((Color)line.getStroke());
-                }
-            } 
-        };  
-        
-        // event handlers for mouse enter and mouse exit
-        EventHandler<MouseEvent> eventHandlerMouseEntered = new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent e) {
-                if (seleccionarMenuButton.isSelected() || cambiarColorButton.isSelected()) {
-                    line.distinguish();
-                }
-            }
-        };
-        EventHandler<MouseEvent> eventHandlerMouseExited = new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent e) {
-                line.unselect();
-            }
-        };
-        
-        //Registering the event filters
-        line.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandlerMouseClicked);
-        line.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandlerMouseEntered);
-        line.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandlerMouseExited);
-    }
-
+    // TODO
+    // In mode pintar linea points are getting distinguished and block drawing line
+    // 
+    
+    
 }
