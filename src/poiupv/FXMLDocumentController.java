@@ -179,13 +179,16 @@ public class FXMLDocumentController implements Initializable {
 
     // ============== Practica ================
     
-    // ============== Pseudo getters =================
+    // ============== Getters & setters =================
     
     public ColorPicker getColorPicker() {
         return colorPicker;
     }
     public Object getSelectedMark() {
         return selectedMark;
+    }
+    public void setSelectedMark(Object mark) {
+        selectedMark = mark;
     }
     
     // ============== Tools buttons ===========
@@ -267,11 +270,7 @@ public class FXMLDocumentController implements Initializable {
     
     private void marcarPunto(MouseEvent event) {
         
-        Point point = new Point(Settings.RADIUS_NORMAL, Settings.RADIUS_BIG);
-        point.setStroke(Color.TRANSPARENT);
-        point.setStrokeWidth(3);
-        point.setFill(colorPicker.getValue());
-
+        Point point = new Point(Settings.RADIUS_NORMAL, Settings.RADIUS_BIG, this);
         zoomGroup.getChildren().add(point);
         
         // draw a point
@@ -279,48 +278,7 @@ public class FXMLDocumentController implements Initializable {
         point.setCenterY(event.getY());
         event.consume();
         
-        // event handler for clicking on point
-        EventHandler<MouseEvent> eventHandlerMouseClicked = new EventHandler<MouseEvent>() { 
-            @Override 
-            public void handle(MouseEvent e) { 
-                
-                if (tool == Tool.CHANGE_COLOR){   // mode of color changing, no selection
-                    point.setFill(colorPicker.getValue());
-                } else if (tool == Tool.SELECTION) {    // selection
-                    
-                    // unselect previously selected mark
-                    if (selectedMark instanceof Point) {
-                        Point selectedPoint = (Point)selectedMark;
-                        selectedPoint.unselect();
-                    }
-
-                    // select new
-                    selectedMark = point;
-                    point.select(colorPicker);
-                    
-                } 
-            } 
-        };  
-        
-        // event handlers for mouse enter and mouse exit
-        EventHandler<MouseEvent> eventHandlerMouseEntered = new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent e) {
-                point.setRadius(Settings.RADIUS_BIG);
-            }
-        };
-        EventHandler<MouseEvent> eventHandlerMouseExited = new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent e) {
-                if (point != selectedMark) {
-                    point.setRadius(Settings.RADIUS_NORMAL);
-                }
-                
-            }
-        };
-        
-        //Registering the event filters
-        point.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandlerMouseClicked);
-        point.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandlerMouseEntered);
-        point.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandlerMouseExited);
+        point.initializeHandlers();
     }
 
     private void initializeLine(MouseEvent event) {
@@ -331,11 +289,5 @@ public class FXMLDocumentController implements Initializable {
         zoomGroup.getChildren().add(line);
         drawingMark = line;
     }
-    
-
-    // TODO
-    // In mode pintar linea points are getting distinguished and block drawing line
-    // 
-    
     
 }
