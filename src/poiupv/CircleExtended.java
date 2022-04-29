@@ -28,6 +28,7 @@ public class CircleExtended extends Circle {
         this.setStrokeWidth(widthNormal);
         this.setStroke(controller.getColorPicker().getValue());
         this.setFill(Color.TRANSPARENT);
+        this.setMouseTransparent(true);
     }
     
     public double getInitialX() {

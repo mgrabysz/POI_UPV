@@ -28,6 +28,7 @@ public class LineExtended extends Line {
         this.controller = controller;
         this.setStrokeWidth(widthNormal);
         this.setStroke(controller.getColorPicker().getValue());
+        this.setMouseTransparent(true);
     }
     
     public void select(ColorPicker picker, Spinner<Double> spinner) {

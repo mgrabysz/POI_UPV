@@ -6,7 +6,6 @@
 package poiupv;
 
 import javafx.event.EventHandler;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -40,6 +39,7 @@ public class Point extends Circle {
         this.setStroke(Color.TRANSPARENT);
         this.setStrokeWidth(3);
         this.setFill(controller.getColorPicker().getValue());
+        this.setMouseTransparent(true);
     }
     
     public void select() {

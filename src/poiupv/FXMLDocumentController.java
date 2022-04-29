@@ -21,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -195,14 +196,17 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void marcarPuntoClicked(ActionEvent event) {
         tool = Tool.MARK_POINT;
+        setAllTransparent();
     }
     @FXML
     private void seleccionarClicked(ActionEvent event) {
         tool = Tool.SELECTION;
+        setAllNotTransparent();
     }
     @FXML
     private void cambiarColorButtonClicked(ActionEvent event) {
         tool = Tool.CHANGE_COLOR;
+        setAllNotTransparent();
         if (selectedMark instanceof Point) {
             Point selectedPoint = (Point)selectedMark;
             selectedPoint.unselect();
@@ -211,10 +215,12 @@ public class FXMLDocumentController implements Initializable {
     }
     @FXML
     private void lineaClicked(ActionEvent event) {
+        setAllTransparent();
         tool = Tool.DRAW_LINE;
     }
     @FXML
     private void circuloMenuButtonClicked(ActionEvent event) {
+        setAllTransparent();
         tool = Tool.DRAW_CIRCLE;
     }
     
@@ -308,6 +314,14 @@ public class FXMLDocumentController implements Initializable {
         drawingMark = circle;
     }
 
+    private void setAllTransparent() {
+        for (int i=1; i<zoomGroup.getChildren().size(); i++)    // starts with i=1 because on index 0 is Pane
+            zoomGroup.getChildren().get(i).setMouseTransparent(true);
+    }
     
+    private void setAllNotTransparent() {
+        for (int i=1; i<zoomGroup.getChildren().size(); i++)    // starts with i=1 because on index 0 is Pane
+            zoomGroup.getChildren().get(i).setMouseTransparent(false);
+    }
     
 }
