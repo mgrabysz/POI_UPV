@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -153,7 +154,7 @@ public class FXMLDocumentController implements Initializable {
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
         grosorSpinner.setValueFactory(valueFactory);
         
-        grosorSpinner.disableProperty().bind(lineaMenuButton.selectedProperty().not());
+        grosorSpinner.disableProperty().bind(Bindings.or(lineaMenuButton.selectedProperty(), circuloMenuButton.selectedProperty()).not());
         
         seleccionarMenuButton.setSelected(true);
         tool = Tool.SELECTION;
@@ -229,7 +230,7 @@ public class FXMLDocumentController implements Initializable {
         if (selectedMark instanceof Point) {
             Point selectedPoint = (Point)selectedMark;
             selectedPoint.setFill(colorPicker.getValue());
-            }
+        }
     }
     
     // =============== Event handlers =================
@@ -260,6 +261,10 @@ public class FXMLDocumentController implements Initializable {
         if (drawingMark instanceof LineExtended){
             LineExtended line = (LineExtended)drawingMark;
             line.initializeHandlers();
+            drawingMark = null;
+        } else if (drawingMark instanceof CircleExtended) {
+            CircleExtended circle = (CircleExtended)drawingMark;
+            circle.initializeHandlers();
             drawingMark = null;
         }
     }
