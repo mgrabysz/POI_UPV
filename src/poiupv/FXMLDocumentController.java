@@ -34,6 +34,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseDragEvent;
@@ -42,6 +43,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import poiupv.Poi;
@@ -94,6 +96,8 @@ public class FXMLDocumentController implements Initializable {
     public Tool tool;
     @FXML
     private RadioMenuItem circuloMenuButton;
+    @FXML
+    private RadioMenuItem anotarTextoButton;
 
     @FXML
     void zoomIn(ActionEvent event) {
@@ -192,6 +196,9 @@ public class FXMLDocumentController implements Initializable {
     public void setSelectedMark(Object mark) {
         selectedMark = mark;
     }
+    public Group getZoomGroup() {
+        return zoomGroup;
+    }
     
     // ============== Tools buttons ======================
     @FXML
@@ -224,6 +231,11 @@ public class FXMLDocumentController implements Initializable {
         setAllTransparent();
         tool = Tool.DRAW_CIRCLE;
     }
+    @FXML
+    private void anotarTextoButtonClicked(ActionEvent event) {
+        setAllTransparent();
+        tool = Tool.ADD_TEXT;
+    }
     
     @FXML
     private void colorPickerClicked(ActionEvent event) {
@@ -232,7 +244,7 @@ public class FXMLDocumentController implements Initializable {
             selectedPoint.setFill(colorPicker.getValue());
         }
     }
-    
+        
     // =============== Event handlers =================
     @FXML
     private void panePressed(MouseEvent event) {
@@ -271,8 +283,10 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void paneClicked(MouseEvent event) {
-        if (marcarPuntoMenuButton.isSelected()) {
+        if (tool == Tool.MARK_POINT) {
             marcarPunto(event);
+        } else if (tool == Tool.ADD_TEXT) {
+            addText(event);
         }
     }
     
@@ -318,6 +332,14 @@ public class FXMLDocumentController implements Initializable {
         zoomGroup.getChildren().add(circle);
         drawingMark = circle;
     }
+    
+    private void addText(MouseEvent event) {
+        TextFieldExtended textField = new TextFieldExtended(event.getX(), event.getY(), this);
+        zoomGroup.getChildren().add(textField);
+        textField.requestFocus();
+        
+        
+    }
 
     private void setAllTransparent() {
         for (int i=1; i<zoomGroup.getChildren().size(); i++)    // starts with i=1 because on index 0 is Pane
@@ -328,5 +350,7 @@ public class FXMLDocumentController implements Initializable {
         for (int i=1; i<zoomGroup.getChildren().size(); i++)    // starts with i=1 because on index 0 is Pane
             zoomGroup.getChildren().get(i).setMouseTransparent(false);
     }
+
+    
     
 }
