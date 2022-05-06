@@ -5,7 +5,11 @@
  */
 package poiupv;
 
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
@@ -15,15 +19,71 @@ import javafx.scene.text.Text;
 public class TextExtended extends Text {
     
     private final FXMLDocumentController controller;
+    double size;
 
     public TextExtended(double x, double y, String text, FXMLDocumentController controller) {
         super(text);
         this.controller = controller;
+        this.size = (double)controller.getGrosorSpinner().getValue();
         this.setX(x);
         this.setY(y);
-        double size = (double)controller.getGrosorSpinner().getValue();
-        this.setFont(Font.font("Gafata", size));
+        this.setFill(controller.getColorPicker().getValue());
+        this.setFont(Font.font("Gafata", FontWeight.NORMAL, size));
+        this.initializeHandlers();
+    }
+    
+    public void distinguish() {
+        /**
+         * Makes object a little bit bigger when mouse hovers
+         */
+        this.setFont(Font.font("Gafata", FontWeight.BOLD, size));
+    }
+    public void unselect() {
+        /**
+         * Also undistinguish
+         */
+        this.setFont(Font.font("Gafata", FontWeight.NORMAL, size));
+    }
+    
+    public void initializeHandlers() {
+        // event handler for clicking on circle
+        EventHandler<MouseEvent> eventHandlerMouseClicked = new EventHandler<MouseEvent>() { 
+            @Override 
+            public void handle(MouseEvent e) { 
+                
+                if (controller.tool == Tool.CHANGE_COLOR){   // mode of color changing, no selection
+                    TextExtended.this.setFill(controller.getColorPicker().getValue());
+                } else if (controller.tool == Tool.SELECTION) {    // selection
+                    
+                    // unselect previously selected mark
+                    if (controller.getSelectedMark() instanceof Point) {
+                        Point selectedPoint = (Point)controller.getSelectedMark();
+                        selectedPoint.unselect();
+                    }
+
+                    // select new
+                    controller.getColorPicker().setValue((Color)TextExtended.this.getFill());
+                }
+            } 
+        };  
         
+        // event handlers for mouse enter and mouse exit
+        EventHandler<MouseEvent> eventHandlerMouseEntered = new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent e) {
+                if (controller.tool == Tool.SELECTION || controller.tool == Tool.CHANGE_COLOR) {    // selection || change_color
+                    TextExtended.this.distinguish();
+                }
+            }
+        };
+        EventHandler<MouseEvent> eventHandlerMouseExited = new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent e) {
+                TextExtended.this.unselect();
+            }
+        };
         
+        //Registering the event filters
+        this.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandlerMouseClicked);
+        this.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandlerMouseEntered);
+        this.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandlerMouseExited);
     }
 }
