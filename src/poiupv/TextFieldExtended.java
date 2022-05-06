@@ -6,6 +6,7 @@
 package poiupv;
 
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 /**
@@ -23,12 +24,10 @@ public class TextFieldExtended extends TextField {
         this.setLayoutY(y);
         
         this.setOnAction(e -> {
-            Text text = new Text(this.getText());
-            text.setX(this.getLayoutX());
-            text.setY(this.getLayoutY());
-            text.setStyle("-fx-font-family: Gafata; -fx-font-size: 40;");
-            controller.getZoomGroup().getChildren().add(text);
+            // Enter pressed
+            // Focus is lost automatically while deleting object triggering Listener
             controller.getZoomGroup().getChildren().remove(this);
+            controller.setDrawingMark(null);
             e.consume();
         });
         
@@ -38,6 +37,7 @@ public class TextFieldExtended extends TextField {
                 text.setX(this.getLayoutX());
                 text.setY(this.getLayoutY());
                 text.setStyle("-fx-font-family: Gafata; -fx-font-size: 40;");
+                text.setFill(controller.getColorPicker().getValue());
                 controller.getZoomGroup().getChildren().add(text);
                 controller.getZoomGroup().getChildren().remove(this);
             }

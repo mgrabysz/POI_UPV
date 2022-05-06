@@ -199,6 +199,9 @@ public class FXMLDocumentController implements Initializable {
     public Group getZoomGroup() {
         return zoomGroup;
     }
+    public void setDrawingMark(Object mark) {
+        drawingMark = mark;
+    }
     
     // ============== Tools buttons ======================
     @FXML
@@ -285,8 +288,10 @@ public class FXMLDocumentController implements Initializable {
     private void paneClicked(MouseEvent event) {
         if (tool == Tool.MARK_POINT) {
             marcarPunto(event);
-        } else if (tool == Tool.ADD_TEXT) {
+        } else if (tool == Tool.ADD_TEXT && drawingMark == null) {
             addText(event);
+        } else if (tool == Tool.ADD_TEXT && drawingMark instanceof TextFieldExtended) {
+            drawingMark = null;
         }
     }
     
@@ -337,8 +342,7 @@ public class FXMLDocumentController implements Initializable {
         TextFieldExtended textField = new TextFieldExtended(event.getX(), event.getY(), this);
         zoomGroup.getChildren().add(textField);
         textField.requestFocus();
-        
-        
+        drawingMark = textField;
     }
 
     private void setAllTransparent() {
