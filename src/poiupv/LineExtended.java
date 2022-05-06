@@ -58,14 +58,6 @@ public class LineExtended extends Line {
                 if (controller.tool == Tool.CHANGE_COLOR){   // mode of color changing, no selection
                     LineExtended.this.setStroke(controller.getColorPicker().getValue());
                 } else if (controller.tool == Tool.SELECTION) {    // selection
-                    
-                    // unselect previously selected mark
-                    if (controller.getSelectedMark() instanceof Point) {
-                        Point selectedPoint = (Point)controller.getSelectedMark();
-                        selectedPoint.unselect();
-                    }
-
-                    // select new
                     controller.getColorPicker().setValue((Color)LineExtended.this.getStroke());
                 }
             } 

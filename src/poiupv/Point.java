@@ -43,8 +43,6 @@ public class Point extends Circle {
     }
     
     public void select() {
-        this.setStroke(Color.ORANGE);
-        this.setRadius(Settings.RADIUS_BIG);
         controller.getColorPicker().setValue((Color)this.getFill());
     }
     
@@ -63,17 +61,7 @@ public class Point extends Circle {
                 if (controller.tool == Tool.CHANGE_COLOR){   // mode of color changing, no selection
                     Point.this.setFill(controller.getColorPicker().getValue());
                 } else if (controller.tool == Tool.SELECTION) {    // selection
-                    
-                    // unselect previously selected mark
-                    if (controller.getSelectedMark() instanceof Point) {
-                        Point selectedPoint = (Point)controller.getSelectedMark();
-                        selectedPoint.unselect();
-                    }
-
-                    // select new
-                    controller.setSelectedMark(Point.this);
                     Point.this.select();
-                    
                 } 
             } 
         };  
@@ -86,9 +74,8 @@ public class Point extends Circle {
         };
         EventHandler<MouseEvent> eventHandlerMouseExited = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
-                if (Point.this != controller.getSelectedMark()) {
-                    Point.this.setRadius(Settings.RADIUS_NORMAL);
-                }
+                Point.this.setRadius(Settings.RADIUS_NORMAL);
+                
                 
             }
         };

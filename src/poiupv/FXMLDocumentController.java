@@ -77,7 +77,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ToggleGroup herramientasToggleGroup;
     
-    private Object selectedMark, drawingMark;
+    private Object drawingMark;
     @FXML
     private ColorPicker colorPicker;
     @FXML
@@ -148,7 +148,6 @@ public class FXMLDocumentController implements Initializable {
         zoomGroup.getChildren().add(map_scrollpane.getContent());
         map_scrollpane.setContent(contentGroup);
         
-        selectedMark = null;    // mark which is selected (point, circle, line)
         drawingMark = null;     // mark which is currently being drawn
         
         colorPicker.setValue(Color.RED);
@@ -185,12 +184,6 @@ public class FXMLDocumentController implements Initializable {
     public ColorPicker getColorPicker() {
         return colorPicker;
     }
-    public Object getSelectedMark() {
-        return selectedMark;
-    }
-    public void setSelectedMark(Object mark) {
-        selectedMark = mark;
-    }
     public Group getZoomGroup() {
         return zoomGroup;
     }
@@ -219,11 +212,6 @@ public class FXMLDocumentController implements Initializable {
         tool = Tool.CHANGE_COLOR;
         instructionLabel.setText(Instructions.CHANGE_COLOR_INSTR);
         setAllNotTransparent();
-        if (selectedMark instanceof Point) {
-            Point selectedPoint = (Point)selectedMark;
-            selectedPoint.unselect();
-            selectedMark = null;
-        }
     }
     @FXML
     private void lineaClicked(ActionEvent event) {
@@ -254,10 +242,6 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void colorPickerClicked(ActionEvent event) {
-        if (selectedMark instanceof Point) {
-            Point selectedPoint = (Point)selectedMark;
-            selectedPoint.setFill(colorPicker.getValue());
-        }
     }
         
     // =============== Event handlers =================

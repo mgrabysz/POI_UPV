@@ -60,14 +60,6 @@ public class CircleExtended extends Circle {
                 if (controller.tool == Tool.CHANGE_COLOR){   // mode of color changing, no selection
                     CircleExtended.this.setStroke(controller.getColorPicker().getValue());
                 } else if (controller.tool == Tool.SELECTION) {    // selection
-                    
-                    // unselect previously selected mark
-                    if (controller.getSelectedMark() instanceof Point) {
-                        Point selectedPoint = (Point)controller.getSelectedMark();
-                        selectedPoint.unselect();
-                    }
-
-                    // select new
                     controller.getColorPicker().setValue((Color)CircleExtended.this.getStroke());
                 }
             } 
