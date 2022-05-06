@@ -76,7 +76,7 @@
                   <Label text="Color:" />
                   <ColorPicker fx:id="colorPicker" onAction="#colorPickerClicked" prefWidth="140.0" />
                   <Separator prefWidth="200.0" />
-                  <Label fx:id="grosorLabel" text="Grosor:" />
+                  <Label fx:id="grosorLabel" text="Grosor/tamaño:" />
                   <Spinner fx:id="grosorSpinner" editable="true" prefWidth="140.0" />
                </children>
                <padding>

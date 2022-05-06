@@ -33,10 +33,8 @@ public class TextFieldExtended extends TextField {
         
         this.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
-                Text text = new Text(this.getText());
-                text.setX(this.getLayoutX());
-                text.setY(this.getLayoutY());
-                text.setStyle("-fx-font-family: Gafata; -fx-font-size: 40;");
+                Text text = new TextExtended(this.getLayoutX(), this.getLayoutY(), this.getText(), controller);
+//                text.setStyle("-fx-font-family: Gafata; -fx-font-size: 40;");
                 text.setFill(controller.getColorPicker().getValue());
                 controller.getZoomGroup().getChildren().add(text);
                 controller.getZoomGroup().getChildren().remove(this);

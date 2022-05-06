@@ -158,7 +158,7 @@ public class FXMLDocumentController implements Initializable {
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
         grosorSpinner.setValueFactory(valueFactory);
         
-        grosorSpinner.disableProperty().bind(Bindings.or(lineaMenuButton.selectedProperty(), circuloMenuButton.selectedProperty()).not());
+        grosorSpinner.disableProperty().bind(Bindings.or(Bindings.or(lineaMenuButton.selectedProperty(), circuloMenuButton.selectedProperty()), anotarTextoButton.selectedProperty()).not());
         
         seleccionarMenuButton.setSelected(true);
         tool = Tool.SELECTION;
@@ -202,6 +202,9 @@ public class FXMLDocumentController implements Initializable {
     public void setDrawingMark(Object mark) {
         drawingMark = mark;
     }
+    public Spinner getGrosorSpinner() {
+        return grosorSpinner;
+    }
     
     // ============== Tools buttons ======================
     @FXML
@@ -228,16 +231,24 @@ public class FXMLDocumentController implements Initializable {
     private void lineaClicked(ActionEvent event) {
         setAllTransparent();
         tool = Tool.DRAW_LINE;
+        double d = Settings.LINE_STROKE_NORMAL;
+        SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
+        grosorSpinner.setValueFactory(valueFactory);
     }
     @FXML
     private void circuloMenuButtonClicked(ActionEvent event) {
         setAllTransparent();
         tool = Tool.DRAW_CIRCLE;
+        double d = Settings.LINE_STROKE_NORMAL;
+        SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
+        grosorSpinner.setValueFactory(valueFactory);
     }
     @FXML
     private void anotarTextoButtonClicked(ActionEvent event) {
         setAllTransparent();
         tool = Tool.ADD_TEXT;
+        SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(10, 50, 30, 10);
+        grosorSpinner.setValueFactory(valueFactory);
     }
     
     @FXML

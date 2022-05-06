@@ -52,7 +52,7 @@ public class CircleExtended extends Circle {
     
     public void initializeHandlers() {
         
-        // event handler for clicking on line
+        // event handler for clicking on circle
         EventHandler<MouseEvent> eventHandlerMouseClicked = new EventHandler<MouseEvent>() { 
             @Override 
             public void handle(MouseEvent e) { 
