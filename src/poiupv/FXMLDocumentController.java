@@ -73,8 +73,6 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private MenuItem pin_info;
     @FXML
-    private Label posicion;
-    @FXML
     private RadioMenuItem marcarPuntoMenuButton;
     @FXML
     private ToggleGroup herramientasToggleGroup;
@@ -98,6 +96,8 @@ public class FXMLDocumentController implements Initializable {
     private RadioMenuItem circuloMenuButton;
     @FXML
     private RadioMenuItem anotarTextoButton;
+    @FXML
+    private Label instructionLabel;
 
     @FXML
     void zoomIn(ActionEvent event) {
@@ -162,12 +162,7 @@ public class FXMLDocumentController implements Initializable {
         
         seleccionarMenuButton.setSelected(true);
         tool = Tool.SELECTION;
-    }
-
-    @FXML
-    private void muestraPosicion(MouseEvent event) {
-        posicion.setText("sceneX: " + (int) event.getSceneX() + ", sceneY: " + (int) event.getSceneY() + "\n"
-                + "         X: " + (int) event.getX() + ",          Y: " + (int) event.getY());
+        instructionLabel.setText(Instructions.SELECTION_INSTR);
     }
 
     @FXML
@@ -210,16 +205,19 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void marcarPuntoClicked(ActionEvent event) {
         tool = Tool.MARK_POINT;
+        instructionLabel.setText(Instructions.MARK_POINT_INSTR);
         setAllTransparent();
     }
     @FXML
     private void seleccionarClicked(ActionEvent event) {
         tool = Tool.SELECTION;
+        instructionLabel.setText(Instructions.SELECTION_INSTR);
         setAllNotTransparent();
     }
     @FXML
     private void cambiarColorButtonClicked(ActionEvent event) {
         tool = Tool.CHANGE_COLOR;
+        instructionLabel.setText(Instructions.CHANGE_COLOR_INSTR);
         setAllNotTransparent();
         if (selectedMark instanceof Point) {
             Point selectedPoint = (Point)selectedMark;
@@ -231,6 +229,7 @@ public class FXMLDocumentController implements Initializable {
     private void lineaClicked(ActionEvent event) {
         setAllTransparent();
         tool = Tool.DRAW_LINE;
+        instructionLabel.setText(Instructions.DRAW_LINE_INSTR);
         double d = Settings.LINE_STROKE_NORMAL;
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
         grosorSpinner.setValueFactory(valueFactory);
@@ -239,6 +238,7 @@ public class FXMLDocumentController implements Initializable {
     private void circuloMenuButtonClicked(ActionEvent event) {
         setAllTransparent();
         tool = Tool.DRAW_CIRCLE;
+        instructionLabel.setText(Instructions.DRAW_CIRCLE_INSTR);
         double d = Settings.LINE_STROKE_NORMAL;
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
         grosorSpinner.setValueFactory(valueFactory);
@@ -247,6 +247,7 @@ public class FXMLDocumentController implements Initializable {
     private void anotarTextoButtonClicked(ActionEvent event) {
         setAllTransparent();
         tool = Tool.ADD_TEXT;
+        instructionLabel.setText(Instructions.ADD_TEXT_INSTR);
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(10, 50, 30, 10);
         grosorSpinner.setValueFactory(valueFactory);
     }
@@ -364,6 +365,10 @@ public class FXMLDocumentController implements Initializable {
     private void setAllNotTransparent() {
         for (int i=1; i<zoomGroup.getChildren().size(); i++)    // starts with i=1 because on index 0 is Pane
             zoomGroup.getChildren().get(i).setMouseTransparent(false);
+    }
+
+    @FXML
+    private void muestraPosicion(MouseEvent event) {
     }
 
     
