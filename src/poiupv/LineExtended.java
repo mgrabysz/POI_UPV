@@ -6,7 +6,10 @@
 package poiupv;
 
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Spinner;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -57,8 +60,10 @@ public class LineExtended extends Line {
                 
                 if (controller.tool == Tool.CHANGE_COLOR){   // mode of color changing, no selection
                     LineExtended.this.setStroke(controller.getColorPicker().getValue());
-                } else if (controller.tool == Tool.SELECTION) {    // selection
+                } else if (controller.tool == Tool.SELECTION) {    // color selection mode
                     controller.getColorPicker().setValue((Color)LineExtended.this.getStroke());
+                } else if (controller.tool == Tool.DELETE) {    // deleting mode
+                    controller.getZoomGroup().getChildren().remove((Node)e.getSource());
                 }
             } 
         };  
@@ -66,7 +71,7 @@ public class LineExtended extends Line {
         // event handlers for mouse enter and mouse exit
         EventHandler<MouseEvent> eventHandlerMouseEntered = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
-                if (controller.tool == Tool.SELECTION || controller.tool == Tool.CHANGE_COLOR) {    // selection || change_color
+                if (controller.tool == Tool.SELECTION || controller.tool == Tool.CHANGE_COLOR || controller.tool == Tool.DELETE) {    // selection || change_color
                     LineExtended.this.distinguish();
                 }
             }
@@ -77,11 +82,24 @@ public class LineExtended extends Line {
             }
         };
         
-        //Registering the event filters
+        // Registering the event filters
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandlerMouseClicked);
         this.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandlerMouseEntered);
         this.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandlerMouseExited);
     
+        // Deleting the line
+//        this.setOnContextMenuRequested(e -> {
+//            ContextMenu contextMenu = new ContextMenu();
+//            MenuItem deleteItem = new MenuItem("eliminar");
+//            contextMenu.getItems().add(deleteItem);
+//            deleteItem.setOnAction(ev -> {
+//               controller.getZoomGroup().getChildren().remove((Node)e.getSource());
+//               ev.consume();
+//            });
+//            contextMenu.show(this, 0, 0);
+//            System.out.println(this);
+//            e.consume();
+//        });
     }
     
     

@@ -6,6 +6,7 @@
 package poiupv;
 
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -61,6 +62,8 @@ public class CircleExtended extends Circle {
                     CircleExtended.this.setStroke(controller.getColorPicker().getValue());
                 } else if (controller.tool == Tool.SELECTION) {    // selection
                     controller.getColorPicker().setValue((Color)CircleExtended.this.getStroke());
+                } else if (controller.tool == Tool.DELETE) {    // deleting mode
+                    controller.getZoomGroup().getChildren().remove((Node)e.getSource());
                 }
             } 
         };  
@@ -68,7 +71,7 @@ public class CircleExtended extends Circle {
         // event handlers for mouse enter and mouse exit
         EventHandler<MouseEvent> eventHandlerMouseEntered = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
-                if (controller.tool == Tool.SELECTION || controller.tool == Tool.CHANGE_COLOR) {    // selection || change_color
+                if (controller.tool == Tool.SELECTION || controller.tool == Tool.CHANGE_COLOR || controller.tool == Tool.DELETE) {    // selection || change_color
                     CircleExtended.this.distinguish();
                 }
             }

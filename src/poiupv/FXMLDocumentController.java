@@ -21,10 +21,13 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.geometry.Side;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
@@ -39,6 +42,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -98,6 +102,10 @@ public class FXMLDocumentController implements Initializable {
     private RadioMenuItem anotarTextoButton;
     @FXML
     private Label instructionLabel;
+    @FXML
+    private Pane pane;
+    @FXML
+    private RadioMenuItem eliminarMarcaButton;
 
     @FXML
     void zoomIn(ActionEvent event) {
@@ -194,7 +202,7 @@ public class FXMLDocumentController implements Initializable {
         return grosorSpinner;
     }
     
-    // ============== Tools buttons ======================
+    // ============== Tools buttons ==============================
     @FXML
     private void marcarPuntoClicked(ActionEvent event) {
         tool = Tool.MARK_POINT;
@@ -218,6 +226,7 @@ public class FXMLDocumentController implements Initializable {
         setAllTransparent();
         tool = Tool.DRAW_LINE;
         instructionLabel.setText(Instructions.DRAW_LINE_INSTR);
+//        pane.getScene().setCursor(Cursor.CROSSHAIR);
         double d = Settings.LINE_STROKE_NORMAL;
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
         grosorSpinner.setValueFactory(valueFactory);
@@ -239,12 +248,18 @@ public class FXMLDocumentController implements Initializable {
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(10, 50, 30, 10);
         grosorSpinner.setValueFactory(valueFactory);
     }
+    @FXML
+    private void eliminarMarcaButtonClicked(ActionEvent event) {
+        setAllNotTransparent();
+        tool = Tool.DELETE;
+        instructionLabel.setText(Instructions.DELETE_INSTR);
+    }
     
     @FXML
     private void colorPickerClicked(ActionEvent event) {
     }
         
-    // =============== Event handlers =================
+    // =============== Event handlers ================================
     @FXML
     private void panePressed(MouseEvent event) {
         if (tool == Tool.DRAW_LINE){
@@ -354,6 +369,8 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void muestraPosicion(MouseEvent event) {
     }
+
+    
 
     
     

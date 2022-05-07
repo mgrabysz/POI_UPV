@@ -55,6 +55,7 @@
                         <RadioMenuItem fx:id="seleccionarMenuButton" mnemonicParsing="false" onAction="#seleccionarClicked" text="Seleccionar color" toggleGroup="$herramientasToggleGroup" />
                         <RadioMenuItem fx:id="cambiarColorButton" mnemonicParsing="false" onAction="#cambiarColorButtonClicked" text="Cambiar color" toggleGroup="$herramientasToggleGroup" />
                         <RadioMenuItem fx:id="anotarTextoButton" mnemonicParsing="false" onAction="#anotarTextoButtonClicked" text="Anotar texto" toggleGroup="$herramientasToggleGroup" />
+                        <RadioMenuItem fx:id="eliminarMarcaButton" mnemonicParsing="false" onAction="#eliminarMarcaButtonClicked" text="Eliminar marca" toggleGroup="$herramientasToggleGroup" />
                     </items>
                   </Menu>
               </menus>
@@ -85,7 +86,7 @@
             </VBox>
             <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" onMouseExited="#scrollPaneMouseExited" onMouseMoved="#muestraPosicion" pannable="true" prefHeight="529.0" prefWidth="703.0" vbarPolicy="ALWAYS">
                <content>
-                  <Pane onMouseClicked="#paneClicked" onMouseDragged="#paneDragged" onMousePressed="#panePressed" onMouseReleased="#paneReleased">
+                  <Pane fx:id="pane" onMouseClicked="#paneClicked" onMouseDragged="#paneDragged" onMousePressed="#panePressed" onMouseReleased="#paneReleased">
                      <children>
                         <ImageView fitWidth="1500.0" pickOnBounds="true" preserveRatio="true">
                            <image>

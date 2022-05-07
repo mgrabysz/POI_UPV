@@ -6,6 +6,7 @@
 package poiupv;
 
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -55,6 +56,8 @@ public class TextExtended extends Text {
                     TextExtended.this.setFill(controller.getColorPicker().getValue());
                 } else if (controller.tool == Tool.SELECTION) {    // selection
                     controller.getColorPicker().setValue((Color)TextExtended.this.getFill());
+                } else if (controller.tool == Tool.DELETE) {    // deleting mode
+                    controller.getZoomGroup().getChildren().remove((Node)e.getSource());
                 }
             } 
         };  
@@ -62,7 +65,7 @@ public class TextExtended extends Text {
         // event handlers for mouse enter and mouse exit
         EventHandler<MouseEvent> eventHandlerMouseEntered = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
-                if (controller.tool == Tool.SELECTION || controller.tool == Tool.CHANGE_COLOR) {    // selection || change_color
+                if (controller.tool == Tool.SELECTION || controller.tool == Tool.CHANGE_COLOR || controller.tool == Tool.DELETE) {    // selection || change_color
                     TextExtended.this.distinguish();
                 }
             }

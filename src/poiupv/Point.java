@@ -6,6 +6,7 @@
 package poiupv;
 
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -62,7 +63,9 @@ public class Point extends Circle {
                     Point.this.setFill(controller.getColorPicker().getValue());
                 } else if (controller.tool == Tool.SELECTION) {    // selection
                     Point.this.select();
-                } 
+                } else if (controller.tool == Tool.DELETE) {    // deleting mode
+                    controller.getZoomGroup().getChildren().remove((Node)e.getSource());
+                }
             } 
         };  
         
