@@ -106,6 +106,8 @@ public class FXMLDocumentController implements Initializable {
     private Pane pane;
     @FXML
     private RadioMenuItem eliminarMarcaButton;
+    @FXML
+    private MenuItem limpiarButton;
 
     @FXML
     void zoomIn(ActionEvent event) {
@@ -258,6 +260,11 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void colorPickerClicked(ActionEvent event) {
     }
+    
+    @FXML
+    private void limpiarButtonClicked(ActionEvent event) {
+        zoomGroup.getChildren().remove(1, zoomGroup.getChildren().size());
+    }
         
     // =============== Event handlers ================================
     @FXML
@@ -365,10 +372,12 @@ public class FXMLDocumentController implements Initializable {
         for (int i=1; i<zoomGroup.getChildren().size(); i++)    // starts with i=1 because on index 0 is Pane
             zoomGroup.getChildren().get(i).setMouseTransparent(false);
     }
-
+    
     @FXML
     private void muestraPosicion(MouseEvent event) {
     }
+
+    
 
     
 
