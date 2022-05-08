@@ -177,6 +177,7 @@ public class FXMLDocumentController implements Initializable {
         map_scrollpane.setContent(contentGroup);
         
         drawingMark = null;     // mark which is currently being drawn
+        protractor.setCursor(Cursor.MOVE);
         
         // initial settings
         colorPicker.setValue(Color.RED);
@@ -195,6 +196,7 @@ public class FXMLDocumentController implements Initializable {
         marcarPuntoMenuButton.setSelected(true);
         tool = Tool.MARK_POINT;
         instructionLabel.setText(Instructions.MARK_POINT_INSTR);
+        pane.setCursor(Cursor.HAND);
         
         // binding -> undo button is active only if something is drawn on the map
         IntegerBinding groupSize = Bindings.size(zoomGroup.getChildren());
@@ -236,27 +238,30 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void marcarPuntoClicked(ActionEvent event) {
         tool = Tool.MARK_POINT;
+        pane.setCursor(Cursor.HAND);
         instructionLabel.setText(Instructions.MARK_POINT_INSTR);
         setAllTransparent();
     }
     @FXML
     private void seleccionarClicked(ActionEvent event) {
         tool = Tool.SELECTION;
+        pane.setCursor(Cursor.DEFAULT);
         instructionLabel.setText(Instructions.SELECTION_INSTR);
         setAllNotTransparent();
     }
     @FXML
     private void cambiarColorButtonClicked(ActionEvent event) {
         tool = Tool.CHANGE_COLOR;
+        pane.setCursor(Cursor.DEFAULT);
         instructionLabel.setText(Instructions.CHANGE_COLOR_INSTR);
         setAllNotTransparent();
     }
     @FXML
     private void lineaClicked(ActionEvent event) {
-        setAllTransparent();
         tool = Tool.DRAW_LINE;
+        pane.setCursor(Cursor.CROSSHAIR);
         instructionLabel.setText(Instructions.DRAW_LINE_INSTR);
-//        pane.getScene().setCursor(Cursor.CROSSHAIR);
+        setAllTransparent();
         double d = Settings.LINE_STROKE_NORMAL;
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
         grosorSpinner.setValueFactory(valueFactory);
@@ -266,6 +271,7 @@ public class FXMLDocumentController implements Initializable {
         setAllTransparent();
         tool = Tool.DRAW_CIRCLE;
         instructionLabel.setText(Instructions.DRAW_CIRCLE_INSTR);
+        pane.setCursor(Cursor.CROSSHAIR);
         double d = Settings.LINE_STROKE_NORMAL;
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
         grosorSpinner.setValueFactory(valueFactory);
@@ -275,6 +281,7 @@ public class FXMLDocumentController implements Initializable {
         setAllTransparent();
         tool = Tool.ADD_TEXT;
         instructionLabel.setText(Instructions.ADD_TEXT_INSTR);
+        pane.setCursor(Cursor.DEFAULT);
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(10, 50, 30, 10);
         grosorSpinner.setValueFactory(valueFactory);
     }
@@ -283,12 +290,14 @@ public class FXMLDocumentController implements Initializable {
         setAllNotTransparent();
         tool = Tool.DELETE;
         instructionLabel.setText(Instructions.DELETE_INSTR);
+        pane.setCursor(Cursor.DEFAULT);
     }
     @FXML
     private void extremosMenuItemClicked(ActionEvent event) {
         setAllTransparent();
         tool = Tool.EXTREMES;
         instructionLabel.setText(Instructions.EXTREMES_INSTR);
+        pane.setCursor(Cursor.CROSSHAIR);
     }
     
     @FXML
@@ -353,6 +362,7 @@ public class FXMLDocumentController implements Initializable {
             circle.setRadius(radius);
             event.consume();
         }
+        
     }
     @FXML
     private void paneReleased(MouseEvent event) {
@@ -364,7 +374,9 @@ public class FXMLDocumentController implements Initializable {
             CircleExtended circle = (CircleExtended)drawingMark;
             circle.initializeHandlers();
             drawingMark = null;
+            pane.setCursor(Cursor.CROSSHAIR);
         }
+        
     }
     
     @FXML
@@ -460,6 +472,7 @@ public class FXMLDocumentController implements Initializable {
         
         zoomGroup.getChildren().add(circle);
         drawingMark = circle;
+        pane.setCursor(Cursor.H_RESIZE);
     }
     
     private void addText(MouseEvent event) {

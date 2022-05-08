@@ -6,6 +6,7 @@
 package poiupv;
 
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ContextMenu;
@@ -43,12 +44,14 @@ public class LineExtended extends Line {
          * Makes object a little bit bigger when mouse hovers
          */
         this.setStrokeWidth(widthBig);
+        this.setCursor(Cursor.HAND);
     }
     public void unselect() {
         /**
          * Also undistinguish
          */
         this.setStrokeWidth(widthNormal);
+        this.setCursor(Cursor.DEFAULT);
     }
     
     public void initializeHandlers() {

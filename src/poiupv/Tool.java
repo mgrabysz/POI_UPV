@@ -16,7 +16,7 @@ public enum Tool {
 /**
  * TODO
  * Warning before clearing all objects
- * Changing cursor for each tool
+ * Changing cursor for each tool    DONE
  * Undo option  DONE
  * Problem with newer objects hiding older objects
  */

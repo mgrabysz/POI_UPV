@@ -6,6 +6,7 @@
 package poiupv;
 
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -43,12 +44,14 @@ public class CircleExtended extends Circle {
          * Makes object a little bit bigger when mouse hovers
          */
         this.setStrokeWidth(widthBig);
+        this.setCursor(Cursor.HAND);
     }
     public void unselect() {
         /**
          * Also undistinguish
          */
         this.setStrokeWidth(widthNormal);
+        this.setCursor(Cursor.DEFAULT);
     }
     
     public void initializeHandlers() {

@@ -6,6 +6,7 @@
 package poiupv;
 
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -38,12 +39,14 @@ public class TextExtended extends Text {
          * Makes object a little bit bigger when mouse hovers
          */
         this.setFont(Font.font("Gafata", FontWeight.BOLD, size));
+        this.setCursor(Cursor.HAND);
     }
     public void unselect() {
         /**
          * Also undistinguish
          */
         this.setFont(Font.font("Gafata", FontWeight.NORMAL, size));
+        this.setCursor(Cursor.DEFAULT);
     }
     
     public void initializeHandlers() {

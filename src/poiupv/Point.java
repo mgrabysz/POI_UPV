@@ -6,6 +6,7 @@
 package poiupv;
 
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -47,9 +48,14 @@ public class Point extends Circle {
         controller.getColorPicker().setValue((Color)this.getFill());
     }
     
+    public void distinguish() {
+        this.setRadius(Settings.RADIUS_BIG);
+        this.setCursor(Cursor.HAND);
+    }
+    
     public void unselect() {
-        this.setStroke(Color.TRANSPARENT);
         this.setRadius(radiusNormal);
+        this.setCursor(Cursor.DEFAULT);
     }
     
     public void initializeHandlers() {
@@ -72,12 +78,12 @@ public class Point extends Circle {
         // event handlers for mouse enter and mouse exit
         EventHandler<MouseEvent> eventHandlerMouseEntered = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
-                Point.this.setRadius(Settings.RADIUS_BIG);
+                Point.this.distinguish();
             }
         };
         EventHandler<MouseEvent> eventHandlerMouseExited = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
-                Point.this.setRadius(Settings.RADIUS_NORMAL);
+                Point.this.unselect();
                 
                 
             }
