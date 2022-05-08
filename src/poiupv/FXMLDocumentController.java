@@ -400,6 +400,17 @@ public class FXMLDocumentController implements Initializable {
         event.consume();
     }
 
+    @FXML
+    private void SliderScrolled(ScrollEvent event) {
+        if (event.getDeltaY() > 0) {
+            double sliderVal = zoom_slider.getValue();
+            zoom_slider.setValue(sliderVal += 0.1);
+        } else {
+            double sliderVal = zoom_slider.getValue();
+            zoom_slider.setValue(sliderVal -= 0.1);
+        }
+    }
+    
     // ================== Additional functions =====================
     
     private void marcarPunto(MouseEvent event) {
@@ -468,9 +479,6 @@ public class FXMLDocumentController implements Initializable {
     
    
 
-    @FXML
-    private void SliderScrolled(ScrollEvent event) {
-    }
 
     @FXML
     private void scrollPaneMouseEntered(MouseEvent event) {
