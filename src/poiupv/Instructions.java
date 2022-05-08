@@ -17,4 +17,5 @@ public class Instructions {
     public static String DRAW_CIRCLE_INSTR = "Selecciona el color y el grosor. Pulsa el botón de ratón donde debe ser el centro del circulo y arrastrando con el botón pulsado adjusta el radio";
     public static String ADD_TEXT_INSTR = "Selecciona el color y el tamaño. Haz clic a la mapa y empieza introducir el texto. Para acceptar pulsa Enter o haz clic en cualquier punto de la mapa";
     public static String DELETE_INSTR = "Haz clic a una marca para eliminarla";
+    public static String EXTREMES_INSTR = "Haz clic a qualquier punto de la mapa para marcar dos líneas ortogonales que se cruzan en este punto";
 }

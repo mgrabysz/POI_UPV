@@ -44,6 +44,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
@@ -117,6 +118,8 @@ public class FXMLDocumentController implements Initializable {
     
     // ================== variables for moving protractor ======
     private double initialX, initialY, baseX, baseY;
+    @FXML
+    private RadioMenuItem extremosMenuItem;
     
 
     @FXML
@@ -269,6 +272,12 @@ public class FXMLDocumentController implements Initializable {
         tool = Tool.DELETE;
         instructionLabel.setText(Instructions.DELETE_INSTR);
     }
+    @FXML
+    private void extremosMenuItemClicked(ActionEvent event) {
+        setAllTransparent();
+        tool = Tool.EXTREMES;
+        instructionLabel.setText(Instructions.EXTREMES_INSTR);
+    }
     
     @FXML
     private void colorPickerClicked(ActionEvent event) {
@@ -348,6 +357,8 @@ public class FXMLDocumentController implements Initializable {
             addText(event);
         } else if (tool == Tool.ADD_TEXT && drawingMark instanceof TextFieldExtended) {
             drawingMark = null;
+        } else if (tool == Tool.EXTREMES) {
+            markExtremes(event);
         }
     }
     
@@ -428,6 +439,22 @@ public class FXMLDocumentController implements Initializable {
         textField.requestFocus();
         drawingMark = textField;
     }
+    
+    private void markExtremes(MouseEvent event) {
+        double widthNormal = 3;
+        double widthBig = Settings.LINE_STROKE_BIG;
+        double x = event.getX();
+        double y = event.getY();
+        double mapWidth = zoomGroup.getBoundsInLocal().getWidth();
+        double mapHeight = zoomGroup.getBoundsInLocal().getHeight();
+        
+        LineExtended lineH = new LineExtended(8, y, mapWidth-8, y, widthNormal, widthBig, this);
+        LineExtended lineV = new LineExtended(x, 8, x, mapHeight-8, widthNormal, widthBig, this);
+        lineH.initializeHandlers();
+        lineV.initializeHandlers();
+        zoomGroup.getChildren().add(lineH);
+        zoomGroup.getChildren().add(lineV);
+    }
 
     private void setAllTransparent() {
         for (int i=1; i<zoomGroup.getChildren().size(); i++)    // starts with i=1 because on index 0 is Pane
@@ -439,8 +466,14 @@ public class FXMLDocumentController implements Initializable {
             zoomGroup.getChildren().get(i).setMouseTransparent(false);
     }
     
+   
+
     @FXML
-    private void muestraPosicion(MouseEvent event) {
+    private void SliderScrolled(ScrollEvent event) {
+    }
+
+    @FXML
+    private void scrollPaneMouseEntered(MouseEvent event) {
     }
 
 }

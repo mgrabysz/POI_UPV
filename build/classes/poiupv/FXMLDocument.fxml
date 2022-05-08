@@ -29,6 +29,22 @@
          <children>
             <MenuBar>
               <menus>
+                  <Menu mnemonicParsing="false" text="Herramientas">
+                    <items>
+                        <RadioMenuItem fx:id="marcarPuntoMenuButton" mnemonicParsing="false" onAction="#marcarPuntoClicked" text="Marcar punto">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="herramientasToggleGroup" />
+                           </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem fx:id="lineaMenuButton" mnemonicParsing="false" onAction="#lineaClicked" text="Pintar línea" toggleGroup="$herramientasToggleGroup" />
+                        <RadioMenuItem fx:id="circuloMenuButton" mnemonicParsing="false" onAction="#circuloMenuButtonClicked" text="Pintar circulo" toggleGroup="$herramientasToggleGroup" />
+                        <RadioMenuItem fx:id="anotarTextoButton" mnemonicParsing="false" onAction="#anotarTextoButtonClicked" text="Anotar texto" toggleGroup="$herramientasToggleGroup" />
+                        <RadioMenuItem fx:id="extremosMenuItem" mnemonicParsing="false" onAction="#extremosMenuItemClicked" text="Marcar extremos" toggleGroup="$herramientasToggleGroup" />
+                        <RadioMenuItem fx:id="seleccionarMenuButton" mnemonicParsing="false" onAction="#seleccionarClicked" text="Seleccionar color" toggleGroup="$herramientasToggleGroup" />
+                        <RadioMenuItem fx:id="cambiarColorButton" mnemonicParsing="false" onAction="#cambiarColorButtonClicked" text="Cambiar color" toggleGroup="$herramientasToggleGroup" />
+                        <RadioMenuItem fx:id="eliminarMarcaButton" mnemonicParsing="false" onAction="#eliminarMarcaButtonClicked" text="Eliminar marca" toggleGroup="$herramientasToggleGroup" />
+                    </items>
+                  </Menu>
                 <Menu mnemonicParsing="false" text="Fichero">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#cerrarAplicacion" text="Cerrar" />
@@ -44,27 +60,12 @@
                     <MenuItem mnemonicParsing="false" onAction="#acercaDe" text="Acerca de" />
                   </items>
                 </Menu>
-                  <Menu mnemonicParsing="false" text="Herramientas">
-                    <items>
-                        <RadioMenuItem fx:id="marcarPuntoMenuButton" mnemonicParsing="false" onAction="#marcarPuntoClicked" text="Marcar punto">
-                           <toggleGroup>
-                              <ToggleGroup fx:id="herramientasToggleGroup" />
-                           </toggleGroup>
-                        </RadioMenuItem>
-                        <RadioMenuItem fx:id="lineaMenuButton" mnemonicParsing="false" onAction="#lineaClicked" text="Pintar línea" toggleGroup="$herramientasToggleGroup" />
-                        <RadioMenuItem fx:id="circuloMenuButton" mnemonicParsing="false" onAction="#circuloMenuButtonClicked" text="Pintar circulo" toggleGroup="$herramientasToggleGroup" />
-                        <RadioMenuItem fx:id="seleccionarMenuButton" mnemonicParsing="false" onAction="#seleccionarClicked" text="Seleccionar color" toggleGroup="$herramientasToggleGroup" />
-                        <RadioMenuItem fx:id="cambiarColorButton" mnemonicParsing="false" onAction="#cambiarColorButtonClicked" text="Cambiar color" toggleGroup="$herramientasToggleGroup" />
-                        <RadioMenuItem fx:id="anotarTextoButton" mnemonicParsing="false" onAction="#anotarTextoButtonClicked" text="Anotar texto" toggleGroup="$herramientasToggleGroup" />
-                        <RadioMenuItem fx:id="eliminarMarcaButton" mnemonicParsing="false" onAction="#eliminarMarcaButtonClicked" text="Eliminar marca" toggleGroup="$herramientasToggleGroup" />
-                    </items>
-                  </Menu>
               </menus>
             </MenuBar>
             <Region HBox.hgrow="ALWAYS" />
             <Label text="Zoom" />
             <Button focusTraversable="false" mnemonicParsing="false" onAction="#zoomOut" text="-" />
-            <Slider fx:id="zoom_slider" HBox.hgrow="SOMETIMES" />
+            <Slider fx:id="zoom_slider" onScroll="#SliderScrolled" HBox.hgrow="SOMETIMES" />
             <Button focusTraversable="false" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#zoomIn" text="+" />
          </children>
          <VBox.margin>
@@ -87,7 +88,7 @@
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
             </VBox>
-            <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" onMouseExited="#scrollPaneMouseExited" onMouseMoved="#muestraPosicion" pannable="true" prefHeight="529.0" prefWidth="703.0" vbarPolicy="ALWAYS">
+            <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" onMouseEntered="#scrollPaneMouseEntered" onMouseExited="#scrollPaneMouseExited" pannable="true" prefHeight="529.0" prefWidth="703.0" vbarPolicy="ALWAYS">
                <content>
                   <Pane fx:id="pane" onMouseClicked="#paneClicked" onMouseDragged="#paneDragged" onMousePressed="#panePressed" onMouseReleased="#paneReleased">
                      <children>
