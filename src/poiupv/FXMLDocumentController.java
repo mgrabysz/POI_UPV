@@ -38,6 +38,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
@@ -107,12 +108,16 @@ public class FXMLDocumentController implements Initializable {
     private MenuItem limpiarButton;
     @FXML
     private ImageView protractor;
+    @FXML
+    private ToggleButton activarToggleButton;
     
+    // ================== variables ===========================================
     private Object drawingMark;     // object being currently drawn
     public Tool tool;               // currently selected tool
     
     // ================== variables for moving protractor ======
     private double initialX, initialY, baseX, baseY;
+    
 
     @FXML
     void zoomIn(ActionEvent event) {
@@ -167,6 +172,7 @@ public class FXMLDocumentController implements Initializable {
         
         colorPicker.setValue(Color.RED);
         
+        // setting spinner
         // arguments(min, max, initialValue, amountToStepBy)
         double d = Settings.LINE_STROKE_NORMAL;
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
@@ -177,6 +183,8 @@ public class FXMLDocumentController implements Initializable {
         seleccionarMenuButton.setSelected(true);
         tool = Tool.SELECTION;
         instructionLabel.setText(Instructions.SELECTION_INSTR);
+        
+        protractor.setVisible(false);
     }
 
     @FXML
@@ -269,6 +277,31 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void limpiarButtonClicked(ActionEvent event) {
         zoomGroup.getChildren().remove(1, zoomGroup.getChildren().size());
+    }
+    
+    @FXML
+    private void activarToggleButtonClicked(ActionEvent event) {
+        if (activarToggleButton.isSelected()) {
+            protractor.setVisible(true);
+            
+            // calculations of coordinates of the top left corner of the Viewport
+            double scrollH = map_scrollpane.getHvalue();
+            double scrollV = map_scrollpane.getVvalue();
+            double mapWidth = zoomGroup.getBoundsInLocal().getWidth();
+            double mapHeight = zoomGroup.getBoundsInLocal().getHeight();
+            double zoomScale = zoom_slider.getValue();
+            Bounds viewportBounds = map_scrollpane.getViewportBounds();
+
+            double shiftX = (mapWidth - viewportBounds.getWidth() / zoomScale) * scrollH;
+            double shiftY = (mapHeight - viewportBounds.getHeight() / zoomScale) * scrollV;
+
+            // translate the protractor
+            protractor.setTranslateX(30 + shiftX);
+            protractor.setTranslateY(30 + shiftY);
+            
+        } else {
+            protractor.setVisible(false);
+        }
     }
         
     // =============== Event handlers ================================
@@ -384,7 +417,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void protractorReleased(MouseEvent event) {
-        event.consume();
+//        event.consume();
     }
 
     @FXML
@@ -409,6 +442,8 @@ public class FXMLDocumentController implements Initializable {
         baseY = protractor.getTranslateY();
         event.consume();
     }
+
+    
 
     
 

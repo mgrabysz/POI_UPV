@@ -14,6 +14,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -62,9 +63,9 @@
             </MenuBar>
             <Region HBox.hgrow="ALWAYS" />
             <Label text="Zoom" />
-            <Button mnemonicParsing="false" onAction="#zoomOut" text="-" />
+            <Button focusTraversable="false" mnemonicParsing="false" onAction="#zoomOut" text="-" />
             <Slider fx:id="zoom_slider" HBox.hgrow="SOMETIMES" />
-            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#zoomIn" text="+" />
+            <Button focusTraversable="false" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#zoomIn" text="+" />
          </children>
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -79,6 +80,8 @@
                   <Separator prefWidth="200.0" />
                   <Label fx:id="grosorLabel" text="Grosor/tamaño:" />
                   <Spinner fx:id="grosorSpinner" editable="true" prefWidth="140.0" />
+                  <Separator prefWidth="200.0" />
+                  <ToggleButton fx:id="activarToggleButton" focusTraversable="false" mnemonicParsing="false" onAction="#activarToggleButtonClicked" prefWidth="140.0" text="Activar transportador" />
                </children>
                <padding>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
@@ -93,7 +96,7 @@
                               <Image url="@../recursos_entrega/resources/carta_nautica.jpg" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="protractor" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#protractorClicked" onMouseDragged="#protractorDragged" onMousePressed="#protractorPressed" onMouseReleased="#protractorReleased" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="protractor" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#protractorClicked" onMouseDragged="#protractorDragged" onMousePressed="#protractorPressed" onMouseReleased="#protractorReleased" opacity="0.69" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../recursos_entrega/resources/transportador.png" />
                            </image>
