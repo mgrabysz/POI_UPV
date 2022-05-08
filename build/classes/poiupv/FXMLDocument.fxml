@@ -52,6 +52,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Editar">
                   <items>
+                        <MenuItem fx:id="deshacerMenuItem" mnemonicParsing="false" onAction="#deshacerClicked" text="Deshacer" />
                     <MenuItem fx:id="limpiarButton" mnemonicParsing="false" onAction="#limpiarButtonClicked" text="Limpiar la carta" />
                   </items>
                 </Menu>

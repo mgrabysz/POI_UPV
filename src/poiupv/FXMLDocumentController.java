@@ -16,6 +16,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.IntegerBinding;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -111,6 +113,10 @@ public class FXMLDocumentController implements Initializable {
     private ImageView protractor;
     @FXML
     private ToggleButton activarToggleButton;
+    @FXML
+    private RadioMenuItem extremosMenuItem;
+    @FXML
+    private MenuItem deshacerMenuItem;
     
     // ================== variables ===========================================
     private Object drawingMark;     // object being currently drawn
@@ -118,9 +124,8 @@ public class FXMLDocumentController implements Initializable {
     
     // ================== variables for moving protractor ======
     private double initialX, initialY, baseX, baseY;
-    @FXML
-    private RadioMenuItem extremosMenuItem;
     
+
 
     @FXML
     void zoomIn(ActionEvent event) {
@@ -173,7 +178,9 @@ public class FXMLDocumentController implements Initializable {
         
         drawingMark = null;     // mark which is currently being drawn
         
+        // initial settings
         colorPicker.setValue(Color.RED);
+        protractor.setVisible(false);
         
         // setting spinner
         // arguments(min, max, initialValue, amountToStepBy)
@@ -181,13 +188,18 @@ public class FXMLDocumentController implements Initializable {
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
         grosorSpinner.setValueFactory(valueFactory);
         
+        // binding -> spinner is active only with tools: draw line, draw circle, add text
         grosorSpinner.disableProperty().bind(Bindings.or(Bindings.or(lineaMenuButton.selectedProperty(), circuloMenuButton.selectedProperty()), anotarTextoButton.selectedProperty()).not());
         
-        seleccionarMenuButton.setSelected(true);
-        tool = Tool.SELECTION;
-        instructionLabel.setText(Instructions.SELECTION_INSTR);
+        // setting selected tool to mark point
+        marcarPuntoMenuButton.setSelected(true);
+        tool = Tool.MARK_POINT;
+        instructionLabel.setText(Instructions.MARK_POINT_INSTR);
         
-        protractor.setVisible(false);
+        // binding -> undo button is active only if something is drawn on the map
+        IntegerBinding groupSize = Bindings.size(zoomGroup.getChildren());
+        BooleanBinding groupPopulated = groupSize.greaterThan(1);       // group always should contain at least one object - Pane
+        deshacerMenuItem.disableProperty().bind(groupPopulated.not());
     }
 
     @FXML
@@ -311,6 +323,12 @@ public class FXMLDocumentController implements Initializable {
         } else {
             protractor.setVisible(false);
         }
+    }
+    
+    @FXML
+    private void deshacerClicked(ActionEvent event) {
+        // removes last added object
+        zoomGroup.getChildren().remove(zoomGroup.getChildren().size() - 1);
     }
         
     // =============== Event handlers ================================
@@ -483,5 +501,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void scrollPaneMouseEntered(MouseEvent event) {
     }
+
+    
 
 }

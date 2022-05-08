@@ -12,3 +12,11 @@ package poiupv;
 public enum Tool {
     MARK_POINT, DRAW_LINE, SELECTION, CHANGE_COLOR, DRAW_CIRCLE, ADD_TEXT, DELETE, EXTREMES;
 }
+
+/**
+ * TODO
+ * Warning before clearing all objects
+ * Changing cursor for each tool
+ * Undo option  DONE
+ * Problem with newer objects hiding older objects
+ */
