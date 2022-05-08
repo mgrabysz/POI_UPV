@@ -360,8 +360,36 @@ public class FXMLDocumentController implements Initializable {
             zoomGroup.getChildren().remove(drawingLine);
         }
     }
+    
+    @FXML
+    private void protractorReleased(MouseEvent event) {
+//        event.consume();
+    }
 
-    // ========== Additional functions ============
+    @FXML
+    private void protractorDragged(MouseEvent event) {
+        double shiftX = event.getSceneX() - initialX;
+        double shiftY = event.getSceneY() - initialY;
+        protractor.setTranslateX(baseX + shiftX);
+        protractor.setTranslateY(baseY + shiftY);
+        event.consume();
+    }
+
+    @FXML
+    private void protractorClicked(MouseEvent event) {
+        event.consume();
+    }
+
+    @FXML
+    private void protractorPressed(MouseEvent event) {
+        initialX = event.getSceneX();
+        initialY = event.getSceneY();
+        baseX = protractor.getTranslateX();
+        baseY = protractor.getTranslateY();
+        event.consume();
+    }
+
+    // ================== Additional functions =====================
     
     private void marcarPunto(MouseEvent event) {
         
@@ -415,40 +443,4 @@ public class FXMLDocumentController implements Initializable {
     private void muestraPosicion(MouseEvent event) {
     }
 
-    @FXML
-    private void protractorReleased(MouseEvent event) {
-//        event.consume();
-    }
-
-    @FXML
-    private void protractorDragged(MouseEvent event) {
-        double shiftX = event.getSceneX() - initialX;
-        double shiftY = event.getSceneY() - initialY;
-        protractor.setTranslateX(baseX + shiftX);
-        protractor.setTranslateY(baseY + shiftY);
-        event.consume();
-    }
-
-    @FXML
-    private void protractorClicked(MouseEvent event) {
-        event.consume();
-    }
-
-    @FXML
-    private void protractorPressed(MouseEvent event) {
-        initialX = event.getSceneX();
-        initialY = event.getSceneY();
-        baseX = protractor.getTranslateX();
-        baseY = protractor.getTranslateY();
-        event.consume();
-    }
-
-    
-
-    
-
-    
-
-    
-    
 }
