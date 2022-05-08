@@ -93,7 +93,7 @@
                               <Image url="@../recursos_entrega/resources/carta_nautica.jpg" />
                            </image>
                         </ImageView>
-                        <ImageView fx:id="protractor" fitHeight="150.0" fitWidth="200.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="protractor" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#protractorClicked" onMouseDragged="#protractorDragged" onMousePressed="#protractorPressed" onMouseReleased="#protractorReleased" opacity="0.5" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../recursos_entrega/resources/transportador.png" />
                            </image>

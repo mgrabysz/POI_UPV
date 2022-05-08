@@ -39,6 +39,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
@@ -79,9 +80,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private RadioMenuItem marcarPuntoMenuButton;
     @FXML
-    private ToggleGroup herramientasToggleGroup;
-    
-    private Object drawingMark;
+    private ToggleGroup herramientasToggleGroup;    
     @FXML
     private ColorPicker colorPicker;
     @FXML
@@ -94,8 +93,6 @@ public class FXMLDocumentController implements Initializable {
     private Label grosorLabel;
     @FXML
     private Spinner<Double> grosorSpinner;
-    
-    public Tool tool;
     @FXML
     private RadioMenuItem circuloMenuButton;
     @FXML
@@ -108,6 +105,14 @@ public class FXMLDocumentController implements Initializable {
     private RadioMenuItem eliminarMarcaButton;
     @FXML
     private MenuItem limpiarButton;
+    @FXML
+    private ImageView protractor;
+    
+    private Object drawingMark;     // object being currently drawn
+    public Tool tool;               // currently selected tool
+    
+    // ================== variables for moving protractor ======
+    private double initialX, initialY, baseX, baseY;
 
     @FXML
     void zoomIn(ActionEvent event) {
@@ -375,6 +380,34 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void muestraPosicion(MouseEvent event) {
+    }
+
+    @FXML
+    private void protractorReleased(MouseEvent event) {
+        event.consume();
+    }
+
+    @FXML
+    private void protractorDragged(MouseEvent event) {
+        double shiftX = event.getSceneX() - initialX;
+        double shiftY = event.getSceneY() - initialY;
+        protractor.setTranslateX(baseX + shiftX);
+        protractor.setTranslateY(baseY + shiftY);
+        event.consume();
+    }
+
+    @FXML
+    private void protractorClicked(MouseEvent event) {
+        event.consume();
+    }
+
+    @FXML
+    private void protractorPressed(MouseEvent event) {
+        initialX = event.getSceneX();
+        initialY = event.getSceneY();
+        baseX = protractor.getTranslateX();
+        baseY = protractor.getTranslateY();
+        event.consume();
     }
 
     
