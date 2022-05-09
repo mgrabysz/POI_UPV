@@ -16,4 +16,6 @@ public class Settings {
     public static double LINE_STROKE_NORMAL = 3;
     public static double LINE_STROKE_BIG = 10;
     
+    public static int ACTIONS_SAVED = 5;
+    
 }

@@ -18,6 +18,8 @@ import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -121,6 +123,8 @@ public class FXMLDocumentController implements Initializable {
     // ================== variables ===========================================
     private Object drawingMark;     // object being currently drawn
     public Tool tool;               // currently selected tool
+    private ArrayList<Action> recentActions;    // list storing last 5 done actions, used for UNDO
+    private ObservableList<Action> observableRecentActions;
     
     // ================== variables for moving protractor ======
     private double initialX, initialY, baseX, baseY;
@@ -198,9 +202,12 @@ public class FXMLDocumentController implements Initializable {
         instructionLabel.setText(Instructions.MARK_POINT_INSTR);
         pane.setCursor(Cursor.HAND);
         
-        // binding -> undo button is active only if something is drawn on the map
-        IntegerBinding groupSize = Bindings.size(zoomGroup.getChildren());
-        BooleanBinding groupPopulated = groupSize.greaterThan(1);       // group always should contain at least one object - Pane
+        recentActions = new ArrayList<>();
+        observableRecentActions = FXCollections.observableArrayList(recentActions);
+        
+        // binding -> undo button is active only if there are actions stored in rece
+        IntegerBinding groupSize = Bindings.size(observableRecentActions);
+        BooleanBinding groupPopulated = groupSize.greaterThan(0);       
         deshacerMenuItem.disableProperty().bind(groupPopulated.not());
     }
 
@@ -336,8 +343,10 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void deshacerClicked(ActionEvent event) {
-        // removes last added object
-        zoomGroup.getChildren().remove(zoomGroup.getChildren().size() - 1);
+        // invert last action in list of recent actions
+        Action lastAction = observableRecentActions.get(observableRecentActions.size() - 1);
+        lastAction.undo();
+        observableRecentActions.remove(lastAction);
     }
         
     // =============== Event handlers ================================
@@ -447,6 +456,8 @@ public class FXMLDocumentController implements Initializable {
         
         Point point = new Point(Settings.RADIUS_NORMAL, Settings.RADIUS_BIG, this);
         zoomGroup.getChildren().add(point);
+        ActionNewMark action = new ActionNewMark(this, point);      // saving the action in order to be able to UNDO
+        saveAction(action);
         
         // draw a point
         point.setCenterX(event.getX());
@@ -506,6 +517,14 @@ public class FXMLDocumentController implements Initializable {
     private void setAllNotTransparent() {
         for (int i=1; i<zoomGroup.getChildren().size(); i++)    // starts with i=1 because on index 0 is Pane
             zoomGroup.getChildren().get(i).setMouseTransparent(false);
+    }
+    
+    private void saveAction(Action action) {
+        if (observableRecentActions.size() == Settings.ACTIONS_SAVED) {
+            // if list is full, remove item from head
+            observableRecentActions.remove(0);   
+        }
+        observableRecentActions.add(action);
     }
     
    
