@@ -62,6 +62,8 @@ public class TextExtended extends Text {
                 } else if (controller.tool == Tool.SELECTION) {    // selection
                     controller.getColorPicker().setValue((Color)TextExtended.this.getFill());
                 } else if (controller.tool == Tool.DELETE) {    // deleting mode
+                    ActionDeleteMark action = new ActionDeleteMark(controller, TextExtended.this);
+                    controller.saveAction(action);
                     controller.getZoomGroup().getChildren().remove((Node)e.getSource());
                 }
             } 

@@ -68,6 +68,8 @@ public class CircleExtended extends Circle {
                 } else if (controller.tool == Tool.SELECTION) {    // selection
                     controller.getColorPicker().setValue((Color)CircleExtended.this.getStroke());
                 } else if (controller.tool == Tool.DELETE) {    // deleting mode
+                    ActionDeleteMark action = new ActionDeleteMark(controller, CircleExtended.this);
+                    controller.saveAction(action);
                     controller.getZoomGroup().getChildren().remove((Node)e.getSource());
                 }
             } 

@@ -72,6 +72,8 @@ public class Point extends Circle {
                 } else if (controller.tool == Tool.SELECTION) {    // selection
                     Point.this.select();
                 } else if (controller.tool == Tool.DELETE) {    // deleting mode
+                    ActionDeleteMark action = new ActionDeleteMark(controller, Point.this);
+                    controller.saveAction(action);
                     controller.getZoomGroup().getChildren().remove((Node)e.getSource());
                 }
             } 

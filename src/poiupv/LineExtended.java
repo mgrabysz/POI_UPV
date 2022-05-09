@@ -68,6 +68,8 @@ public class LineExtended extends Line {
                 } else if (controller.tool == Tool.SELECTION) {    // color selection mode
                     controller.getColorPicker().setValue((Color)LineExtended.this.getStroke());
                 } else if (controller.tool == Tool.DELETE) {    // deleting mode
+                    ActionDeleteMark action = new ActionDeleteMark(controller, LineExtended.this);
+                    controller.saveAction(action);
                     controller.getZoomGroup().getChildren().remove((Node)e.getSource());
                 }
             } 
