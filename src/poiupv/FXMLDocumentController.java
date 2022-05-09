@@ -521,6 +521,9 @@ public class FXMLDocumentController implements Initializable {
         lineV.initializeHandlers();
         zoomGroup.getChildren().add(lineH);
         zoomGroup.getChildren().add(lineV);
+        
+        ActionNewExtreme action = new ActionNewExtreme(this, lineV, lineH);
+        saveAction(action);
     }
 
     private void setAllTransparent() {
