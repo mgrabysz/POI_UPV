@@ -376,14 +376,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void paneReleased(MouseEvent event) {
         if (drawingMark instanceof LineExtended){
-            LineExtended line = (LineExtended)drawingMark;
-            line.initializeHandlers();
-            drawingMark = null;
+            finalizeLine();
         } else if (drawingMark instanceof CircleExtended) {
-            CircleExtended circle = (CircleExtended)drawingMark;
-            circle.initializeHandlers();
-            drawingMark = null;
-            pane.setCursor(Cursor.CROSSHAIR);
+            finalizeCircle();
         }
         
     }
@@ -468,6 +463,7 @@ public class FXMLDocumentController implements Initializable {
     }
 
     private void initializeLine(MouseEvent event) {
+        // Function called when mouse pressed in drawing line mode
         double widthNormal = grosorSpinner.getValue();
         double widthBig = Settings.LINE_STROKE_BIG;
         LineExtended line = new LineExtended(event.getX(), event.getY(), event.getX(), event.getY(), widthNormal, widthBig, this);
@@ -475,8 +471,17 @@ public class FXMLDocumentController implements Initializable {
         zoomGroup.getChildren().add(line);
         drawingMark = line;
     }
-
+    private void finalizeLine() {
+        // Function called when mouse released
+        LineExtended line = (LineExtended)drawingMark;
+        line.initializeHandlers();
+        ActionNewMark action = new ActionNewMark(this, line);      // saving the action in order to be able to UNDO
+        saveAction(action);
+        drawingMark = null;
+    }
+    
     private void initializeCircle(MouseEvent event) {
+        // Function called when mouse pressed
         double widthNormal = grosorSpinner.getValue();
         double widthBig = Settings.LINE_STROKE_BIG;
         CircleExtended circle = new CircleExtended(event.getX(), event.getY(), widthNormal, widthBig, this);
@@ -484,6 +489,15 @@ public class FXMLDocumentController implements Initializable {
         zoomGroup.getChildren().add(circle);
         drawingMark = circle;
         pane.setCursor(Cursor.H_RESIZE);
+    }
+    private void finalizeCircle() {
+        // Function called when mouse released
+        CircleExtended circle = (CircleExtended)drawingMark;
+        circle.initializeHandlers();
+        ActionNewMark action = new ActionNewMark(this, circle);      // saving the action in order to be able to UNDO
+        saveAction(action);
+        drawingMark = null;
+        pane.setCursor(Cursor.CROSSHAIR);
     }
     
     private void addText(MouseEvent event) {
@@ -519,7 +533,7 @@ public class FXMLDocumentController implements Initializable {
             zoomGroup.getChildren().get(i).setMouseTransparent(false);
     }
     
-    private void saveAction(Action action) {
+    public void saveAction(Action action) {
         if (observableRecentActions.size() == Settings.ACTIONS_SAVED) {
             // if list is full, remove item from head
             observableRecentActions.remove(0);   

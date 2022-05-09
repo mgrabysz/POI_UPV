@@ -33,7 +33,10 @@ public class TextFieldExtended extends TextField {
         
         this.focusedProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal) {
+                // Creating new text 
                 Text text = new TextExtended(this.getLayoutX(), this.getLayoutY(), this.getText(), controller);
+                ActionNewMark action = new ActionNewMark(controller, text);
+                this.controller.saveAction(action);
                 controller.getZoomGroup().getChildren().add(text);
                 controller.getZoomGroup().getChildren().remove(this);
             }
