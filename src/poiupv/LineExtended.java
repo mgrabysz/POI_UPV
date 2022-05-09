@@ -62,6 +62,8 @@ public class LineExtended extends Line {
             public void handle(MouseEvent e) { 
                 
                 if (controller.tool == Tool.CHANGE_COLOR){   // mode of color changing, no selection
+                    ActionChangeColor action = new ActionChangeColor(controller, (Color)LineExtended.this.getStroke(), LineExtended.this);
+                    controller.saveAction(action);
                     LineExtended.this.setStroke(controller.getColorPicker().getValue());
                 } else if (controller.tool == Tool.SELECTION) {    // color selection mode
                     controller.getColorPicker().setValue((Color)LineExtended.this.getStroke());

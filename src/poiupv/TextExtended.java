@@ -56,6 +56,8 @@ public class TextExtended extends Text {
             public void handle(MouseEvent e) { 
                 
                 if (controller.tool == Tool.CHANGE_COLOR){   // mode of color changing, no selection
+                    ActionChangeColor action = new ActionChangeColor(controller, (Color)TextExtended.this.getFill(), TextExtended.this);
+                    controller.saveAction(action);
                     TextExtended.this.setFill(controller.getColorPicker().getValue());
                 } else if (controller.tool == Tool.SELECTION) {    // selection
                     controller.getColorPicker().setValue((Color)TextExtended.this.getFill());

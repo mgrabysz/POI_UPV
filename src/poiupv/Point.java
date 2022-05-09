@@ -66,6 +66,8 @@ public class Point extends Circle {
             public void handle(MouseEvent e) { 
                 
                 if (controller.tool == Tool.CHANGE_COLOR){   // mode of color changing, no selection
+                    ActionChangeColor action = new ActionChangeColor(controller, (Color)Point.this.getFill(), Point.this);
+                    controller.saveAction(action);
                     Point.this.setFill(controller.getColorPicker().getValue());
                 } else if (controller.tool == Tool.SELECTION) {    // selection
                     Point.this.select();

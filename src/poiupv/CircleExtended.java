@@ -62,6 +62,8 @@ public class CircleExtended extends Circle {
             public void handle(MouseEvent e) { 
                 
                 if (controller.tool == Tool.CHANGE_COLOR){   // mode of color changing, no selection
+                    ActionChangeColor action = new ActionChangeColor(controller, (Color)CircleExtended.this.getStroke(), CircleExtended.this);
+                    controller.saveAction(action);
                     CircleExtended.this.setStroke(controller.getColorPicker().getValue());
                 } else if (controller.tool == Tool.SELECTION) {    // selection
                     controller.getColorPicker().setValue((Color)CircleExtended.this.getStroke());
