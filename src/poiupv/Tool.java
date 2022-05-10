@@ -18,5 +18,6 @@ public enum Tool {
  * Warning before clearing all objects
  * Changing cursor for each tool    DONE
  * Undo option  DONE
+ * Desactivate undo when clear all objects
  * Problem with newer objects hiding older objects
  */

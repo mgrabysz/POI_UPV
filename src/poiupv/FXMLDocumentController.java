@@ -205,10 +205,15 @@ public class FXMLDocumentController implements Initializable {
         recentActions = new ArrayList<>();
         observableRecentActions = FXCollections.observableArrayList(recentActions);
         
-        // binding -> undo button is active only if there are actions stored in rece
-        IntegerBinding groupSize = Bindings.size(observableRecentActions);
-        BooleanBinding groupPopulated = groupSize.greaterThan(0);       
+        // binding -> undo button is active only if there are actions stored in recent actions
+        IntegerBinding actionsGroupSize = Bindings.size(observableRecentActions);
+        BooleanBinding groupPopulated = actionsGroupSize.greaterThan(0);       
         deshacerMenuItem.disableProperty().bind(groupPopulated.not());
+        
+        // binding -> clear all button is active only if there are any object
+        IntegerBinding marksGroupSize = Bindings.size(zoomGroup.getChildren());
+        BooleanBinding markGroupPopulated = marksGroupSize.greaterThan(1);       
+        limpiarButton.disableProperty().bind(markGroupPopulated.not());
     }
 
     @FXML
@@ -314,6 +319,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void limpiarButtonClicked(ActionEvent event) {
         zoomGroup.getChildren().remove(1, zoomGroup.getChildren().size());
+        observableRecentActions.clear();
     }
     
     @FXML
