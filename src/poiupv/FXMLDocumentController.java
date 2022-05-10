@@ -202,6 +202,7 @@ public class FXMLDocumentController implements Initializable {
         instructionLabel.setText(Instructions.MARK_POINT_INSTR);
         pane.setCursor(Cursor.HAND);
         
+        // arrayList storing recent actions to enable undoing them
         recentActions = new ArrayList<>();
         observableRecentActions = FXCollections.observableArrayList(recentActions);
         
@@ -210,7 +211,7 @@ public class FXMLDocumentController implements Initializable {
         BooleanBinding groupPopulated = actionsGroupSize.greaterThan(0);       
         deshacerMenuItem.disableProperty().bind(groupPopulated.not());
         
-        // binding -> clear all button is active only if there are any object
+        // binding -> clear all button is active only if there are any objects
         IntegerBinding marksGroupSize = Bindings.size(zoomGroup.getChildren());
         BooleanBinding markGroupPopulated = marksGroupSize.greaterThan(1);       
         limpiarButton.disableProperty().bind(markGroupPopulated.not());
