@@ -9,7 +9,6 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
@@ -23,28 +22,12 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" stylesheets="@../resources/estilos.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poiupv.FXMLDocumentController">
+<VBox prefHeight="700.0" prefWidth="1200.0" stylesheets="@../resources/estilos.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="poiupv.FXMLDocumentController">
    <children>
       <HBox alignment="CENTER_RIGHT" fillHeight="false" spacing="5.0" VBox.vgrow="NEVER">
          <children>
             <MenuBar>
               <menus>
-                  <Menu mnemonicParsing="false" text="Herramientas">
-                    <items>
-                        <RadioMenuItem fx:id="marcarPuntoMenuButton" mnemonicParsing="false" onAction="#marcarPuntoClicked" text="Marcar punto">
-                           <toggleGroup>
-                              <ToggleGroup fx:id="herramientasToggleGroup" />
-                           </toggleGroup>
-                        </RadioMenuItem>
-                        <RadioMenuItem fx:id="lineaMenuButton" mnemonicParsing="false" onAction="#lineaClicked" text="Pintar línea" toggleGroup="$herramientasToggleGroup" />
-                        <RadioMenuItem fx:id="circuloMenuButton" mnemonicParsing="false" onAction="#circuloMenuButtonClicked" text="Pintar circulo" toggleGroup="$herramientasToggleGroup" />
-                        <RadioMenuItem fx:id="anotarTextoButton" mnemonicParsing="false" onAction="#anotarTextoButtonClicked" text="Anotar texto" toggleGroup="$herramientasToggleGroup" />
-                        <RadioMenuItem fx:id="extremosMenuItem" mnemonicParsing="false" onAction="#extremosMenuItemClicked" text="Marcar extremos" toggleGroup="$herramientasToggleGroup" />
-                        <RadioMenuItem fx:id="seleccionarMenuButton" mnemonicParsing="false" onAction="#seleccionarClicked" text="Seleccionar color" toggleGroup="$herramientasToggleGroup" />
-                        <RadioMenuItem fx:id="cambiarColorButton" mnemonicParsing="false" onAction="#cambiarColorButtonClicked" text="Cambiar color" toggleGroup="$herramientasToggleGroup" />
-                        <RadioMenuItem fx:id="eliminarMarcaButton" mnemonicParsing="false" onAction="#eliminarMarcaButtonClicked" text="Eliminar marca" toggleGroup="$herramientasToggleGroup" />
-                    </items>
-                  </Menu>
                 <Menu mnemonicParsing="false" text="Fichero">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#cerrarAplicacion" text="Cerrar" />
@@ -64,10 +47,6 @@
               </menus>
             </MenuBar>
             <Region HBox.hgrow="ALWAYS" />
-            <Label text="Zoom" />
-            <Button focusTraversable="false" mnemonicParsing="false" onAction="#zoomOut" text="-" />
-            <Slider fx:id="zoom_slider" onScroll="#SliderScrolled" HBox.hgrow="SOMETIMES" />
-            <Button focusTraversable="false" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#zoomIn" text="+" />
          </children>
          <VBox.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -75,21 +54,27 @@
       </HBox>
       <HBox prefHeight="1000.0" prefWidth="1000.0">
          <children>
-            <VBox minWidth="160.0" prefHeight="529.0" prefWidth="160.0" spacing="15.0">
+            <VBox minWidth="170.0" prefHeight="200.0" prefWidth="170.0" spacing="15.0">
                <children>
-                  <Label text="Color:" />
-                  <ColorPicker fx:id="colorPicker" prefWidth="140.0" />
+                  <Label text="Herramientas:" />
+                  <ToggleButton fx:id="marcarPuntoButton" minWidth="140.0" mnemonicParsing="false" onAction="#marcarPuntoClicked" prefWidth="140.0" text="Marcar punto">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="herramientasToggleGroup" />
+                     </toggleGroup></ToggleButton>
+                  <ToggleButton fx:id="pintarLineaButton" minWidth="140.0" mnemonicParsing="false" onAction="#lineaClicked" text="Pintar línea" toggleGroup="$herramientasToggleGroup" />
+                  <ToggleButton fx:id="pintarCirculoButton" minWidth="140.0" mnemonicParsing="false" onAction="#circuloMenuButtonClicked" text="Pintar circulo" toggleGroup="$herramientasToggleGroup" />
+                  <ToggleButton fx:id="anotarTextoButton" minWidth="140.0" mnemonicParsing="false" onAction="#anotarTextoButtonClicked" text="Anotar texto" toggleGroup="$herramientasToggleGroup" />
+                  <ToggleButton fx:id="marcarExtremosButton" minWidth="140.0" mnemonicParsing="false" onAction="#extremosMenuItemClicked" text="Marcar extremos" toggleGroup="$herramientasToggleGroup" />
                   <Separator prefWidth="200.0" />
-                  <Label fx:id="grosorLabel" text="Grosor/tamaño:" />
-                  <Spinner fx:id="grosorSpinner" editable="true" prefWidth="140.0" />
-                  <Separator prefWidth="200.0" />
-                  <ToggleButton fx:id="activarToggleButton" focusTraversable="false" mnemonicParsing="false" onAction="#activarToggleButtonClicked" prefWidth="140.0" text="Activar transportador" />
+                  <ToggleButton fx:id="seleccionarColorButton" minWidth="140.0" mnemonicParsing="false" onAction="#seleccionarClicked" text="Seleccionar color" toggleGroup="$herramientasToggleGroup" />
+                  <ToggleButton fx:id="cambiarColorButton" minWidth="140.0" mnemonicParsing="false" onAction="#cambiarColorButtonClicked" text="Cambiar color" toggleGroup="$herramientasToggleGroup" />
+                  <ToggleButton fx:id="eliminarMarcaButton" minWidth="140.0" mnemonicParsing="false" onAction="#eliminarMarcaButtonClicked" text="Eliminar marca" toggleGroup="$herramientasToggleGroup" />
                </children>
                <padding>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
             </VBox>
-            <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" onMouseExited="#scrollPaneMouseExited" pannable="true" prefHeight="529.0" prefWidth="703.0" vbarPolicy="ALWAYS">
+            <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" onMouseExited="#scrollPaneMouseExited" pannable="true" prefHeight="529.0" prefWidth="1500.0" vbarPolicy="ALWAYS">
                <content>
                   <Pane fx:id="pane" onMouseClicked="#paneClicked" onMouseDragged="#paneDragged" onMousePressed="#panePressed" onMouseReleased="#paneReleased">
                      <children>
@@ -116,6 +101,36 @@
                   </Pane>
                </content>
             </ScrollPane>
+            <VBox minWidth="170.0" prefHeight="529.0" prefWidth="170.0" spacing="15.0">
+               <children>
+                  <Label text="Color:" />
+                  <ColorPicker fx:id="colorPicker" prefWidth="140.0" />
+                  <Separator prefWidth="200.0" />
+                  <Label fx:id="grosorLabel" text="Grosor:" />
+                  <Spinner fx:id="grosorSpinner" editable="true" prefWidth="140.0" />
+                  <Separator prefWidth="200.0" />
+                  <ToggleButton fx:id="activarToggleButton" focusTraversable="false" mnemonicParsing="false" onAction="#activarToggleButtonClicked" prefWidth="140.0" text="Activar transportador" />
+                  <Separator prefWidth="200.0" />
+                  <Label text="Zoom:" />
+                  <HBox alignment="CENTER_LEFT" prefHeight="180.0" prefWidth="141.0">
+                     <children>
+                        <Slider fx:id="zoom_slider" onScroll="#SliderScrolled" orientation="VERTICAL" />
+                        <VBox alignment="CENTER_LEFT" prefHeight="182.0" prefWidth="138.0" spacing="130.0">
+                           <children>
+                              <Button focusTraversable="false" mnemonicParsing="false" onAction="#zoomIn" prefWidth="140.0" text="+" />
+                              <Button focusTraversable="false" mnemonicParsing="false" onAction="#zoomOut" prefWidth="140.0" text="-" />
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding>
+            </VBox>
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" fillHeight="false" prefHeight="40.0">

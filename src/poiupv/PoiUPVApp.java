@@ -22,7 +22,7 @@ public class PoiUPVApp extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
         
         Scene scene = new Scene(root);
-        stage.setTitle("Puntos de interes UPV");
+        stage.setTitle("Carta nautica");
         stage.setScene(scene);
         stage.show();
     }

@@ -9,6 +9,8 @@ import javafx.scene.paint.Color;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -22,6 +24,9 @@ import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -34,6 +39,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -74,40 +80,31 @@ public class FXMLDocumentController implements Initializable {
     private MenuButton map_pin;
     @FXML
     private MenuItem pin_info;
-    @FXML
     private RadioMenuItem marcarPuntoMenuButton;
     @FXML
     private ToggleGroup herramientasToggleGroup;    
     @FXML
     private ColorPicker colorPicker;
     @FXML
-    private RadioMenuItem cambiarColorButton;
-    @FXML
-    private RadioMenuItem seleccionarMenuButton;
-    @FXML
-    private RadioMenuItem lineaMenuButton;
+    private ToggleButton cambiarColorButton;
     @FXML
     private Label grosorLabel;
     @FXML
     private Spinner<Double> grosorSpinner;
     @FXML
-    private RadioMenuItem circuloMenuButton;
-    @FXML
-    private RadioMenuItem anotarTextoButton;
+    private ToggleButton anotarTextoButton;
     @FXML
     private Label instructionLabel;
     @FXML
     private Pane pane;
     @FXML
-    private RadioMenuItem eliminarMarcaButton;
+    private ToggleButton eliminarMarcaButton;
     @FXML
     private MenuItem limpiarButton;
     @FXML
     private ImageView protractor;
     @FXML
     private ToggleButton activarToggleButton;
-    @FXML
-    private RadioMenuItem extremosMenuItem;
     @FXML
     private MenuItem deshacerMenuItem;
     
@@ -119,6 +116,16 @@ public class FXMLDocumentController implements Initializable {
     
     // ================== variables for moving protractor ======
     private double initialX, initialY, baseX, baseY;
+    @FXML
+    private ToggleButton marcarPuntoButton;
+    @FXML
+    private ToggleButton pintarLineaButton;
+    @FXML
+    private ToggleButton marcarExtremosButton;
+    @FXML
+    private ToggleButton seleccionarColorButton;
+    @FXML
+    private ToggleButton pintarCirculoButton;
     
 
 
@@ -157,9 +164,9 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // inicializamos el slider y enlazamos con el zoom
-        zoom_slider.setMin(0.5);
-        zoom_slider.setMax(1.5);
-        zoom_slider.setValue(1.0);
+        zoom_slider.setMin(0.8);
+        zoom_slider.setMax(1.6);
+        zoom_slider.setValue(1.2);
         zoom_slider.valueProperty().addListener((o, oldVal, newVal) -> zoom((Double) newVal));
         
         //=========================================================================
@@ -185,10 +192,11 @@ public class FXMLDocumentController implements Initializable {
         grosorSpinner.setValueFactory(valueFactory);
         
         // binding -> spinner is active only with tools: draw line, draw circle, add text
-        grosorSpinner.disableProperty().bind(Bindings.or(Bindings.or(lineaMenuButton.selectedProperty(), circuloMenuButton.selectedProperty()), anotarTextoButton.selectedProperty()).not());
+        grosorSpinner.disableProperty().bind(Bindings.or(Bindings.or(pintarLineaButton.selectedProperty(), pintarCirculoButton.selectedProperty()), anotarTextoButton.selectedProperty()).not());
+        grosorLabel.disableProperty().bind(Bindings.or(Bindings.or(pintarLineaButton.selectedProperty(), pintarCirculoButton.selectedProperty()), anotarTextoButton.selectedProperty()).not());
         
         // setting selected tool to mark point
-        marcarPuntoMenuButton.setSelected(true);
+        marcarPuntoButton.setSelected(true);
         tool = Tool.MARK_POINT;
         instructionLabel.setText(Instructions.MARK_POINT_INSTR);
         pane.setCursor(Cursor.HAND);
@@ -206,6 +214,18 @@ public class FXMLDocumentController implements Initializable {
         IntegerBinding marksGroupSize = Bindings.size(zoomGroup.getChildren());
         BooleanBinding markGroupPopulated = marksGroupSize.greaterThan(1);       
         limpiarButton.disableProperty().bind(markGroupPopulated.not());
+        
+        // Tooltips
+        marcarPuntoButton.setTooltip(new Tooltip(Instructions.MARK_POINT_INSTR));
+        pintarLineaButton.setTooltip(new Tooltip(Instructions.DRAW_LINE_INSTR));
+        pintarCirculoButton.setTooltip(new Tooltip(Instructions.DRAW_CIRCLE_INSTR));
+        anotarTextoButton.setTooltip(new Tooltip(Instructions.ADD_TEXT_INSTR));
+        marcarExtremosButton.setTooltip(new Tooltip(Instructions.EXTREMES_INSTR));
+        seleccionarColorButton.setTooltip(new Tooltip(Instructions.SELECTION_INSTR));
+        cambiarColorButton.setTooltip(new Tooltip(Instructions.CHANGE_COLOR_INSTR));
+        eliminarMarcaButton.setTooltip(new Tooltip(Instructions.DELETE_INSTR));
+        
+        Locale.setDefault(new Locale("es"));
     }
 
     @FXML
@@ -265,6 +285,7 @@ public class FXMLDocumentController implements Initializable {
         tool = Tool.DRAW_LINE;
         pane.setCursor(Cursor.CROSSHAIR);
         instructionLabel.setText(Instructions.DRAW_LINE_INSTR);
+        grosorLabel.setText("Grosor:");
         setAllTransparent();
         double d = Settings.LINE_STROKE_NORMAL;
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
@@ -275,6 +296,7 @@ public class FXMLDocumentController implements Initializable {
         setAllTransparent();
         tool = Tool.DRAW_CIRCLE;
         instructionLabel.setText(Instructions.DRAW_CIRCLE_INSTR);
+        grosorLabel.setText("Grosor:");
         pane.setCursor(Cursor.CROSSHAIR);
         double d = Settings.LINE_STROKE_NORMAL;
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
@@ -285,6 +307,7 @@ public class FXMLDocumentController implements Initializable {
         setAllTransparent();
         tool = Tool.ADD_TEXT;
         instructionLabel.setText(Instructions.ADD_TEXT_INSTR);
+        grosorLabel.setText("Tamaño:");
         pane.setCursor(Cursor.DEFAULT);
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(10, 50, 30, 10);
         grosorSpinner.setValueFactory(valueFactory);
@@ -307,8 +330,11 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void limpiarButtonClicked(ActionEvent event) {
-        zoomGroup.getChildren().remove(1, zoomGroup.getChildren().size());
-        observableRecentActions.clear();
+        
+        if (askConfirmation()){
+            zoomGroup.getChildren().remove(1, zoomGroup.getChildren().size());
+            observableRecentActions.clear();
+        }
     }
     
     @FXML
@@ -537,6 +563,22 @@ public class FXMLDocumentController implements Initializable {
             observableRecentActions.remove(0);   
         }
         observableRecentActions.add(action);
+    }
+    
+    public boolean askConfirmation() {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar acción");
+        alert.setHeaderText("Acción de limpiar la carta es irreversible");
+        alert.setContentText("¿Seguro que quieres continuar?");
+        
+        ButtonType buttonContinue = new ButtonType("Continuar");
+        ButtonType buttonCancel = new ButtonType("Anular");
+        
+        alert.getButtonTypes().setAll(buttonCancel, buttonContinue);
+        Optional<ButtonType> result = alert.showAndWait();
+
+        return (result.isPresent() && result.get() == buttonContinue);
+        
     }
     
    
