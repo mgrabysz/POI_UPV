@@ -5,6 +5,8 @@
  */
 package poiupv;
 
+import DBAccess.NavegacionDAO;
+import DBAccess.NavegacionDAOException;
 import javafx.scene.paint.Color;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,6 +14,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -57,6 +61,10 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import model.Answer;
+import model.Navegacion;
+import static model.Navegacion.getSingletonNavegacion;
+import model.Problem;
 import poiupv.Poi;
 import poiupv.Point;
 
@@ -125,6 +133,7 @@ public class FXMLDocumentController implements Initializable {
     public Tool tool;               // currently selected tool
     private ArrayList<Action> recentActions;    // list storing last 5 done actions, used for UNDO
     private ObservableList<Action> observableRecentActions;
+    private Navegacion navegacion;
     
     // ================== variables for moving protractor ======
     private double initialX, initialY, baseX, baseY;
@@ -215,6 +224,31 @@ public class FXMLDocumentController implements Initializable {
         IntegerBinding marksGroupSize = Bindings.size(zoomGroup.getChildren());
         BooleanBinding markGroupPopulated = marksGroupSize.greaterThan(1);       
         limpiarButton.disableProperty().bind(markGroupPopulated.not());
+        
+        // Connection to database
+        try {
+            navegacion = getSingletonNavegacion();
+        } catch (NavegacionDAOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+           
+                
+        List<Problem> problems = navegacion.getProblems();
+        Problem problem0 = problems.get(0);
+        System.out.println(problems.size());
+        
+        String text = problem0.getText();
+        System.out.println(text);
+        
+        List<Answer> answers = problem0.getAnswers();
+        
+        for (Answer answer : answers) {
+            System.out.println(answer.getText());
+            System.out.println(answer.getValidity());
+        }
+        
+        
+        
     }
 
     @FXML
