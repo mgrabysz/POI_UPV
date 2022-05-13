@@ -80,7 +80,6 @@ public class FXMLDocumentController implements Initializable {
     private MenuButton map_pin;
     @FXML
     private MenuItem pin_info;
-    private RadioMenuItem marcarPuntoMenuButton;
     @FXML
     private ToggleGroup herramientasToggleGroup;    
     @FXML
@@ -107,15 +106,6 @@ public class FXMLDocumentController implements Initializable {
     private ToggleButton activarToggleButton;
     @FXML
     private MenuItem deshacerMenuItem;
-    
-    // ================== variables ===========================================
-    private Object drawingMark;     // object being currently drawn
-    public Tool tool;               // currently selected tool
-    private ArrayList<Action> recentActions;    // list storing last 5 done actions, used for UNDO
-    private ObservableList<Action> observableRecentActions;
-    
-    // ================== variables for moving protractor ======
-    private double initialX, initialY, baseX, baseY;
     @FXML
     private ToggleButton marcarPuntoButton;
     @FXML
@@ -126,6 +116,15 @@ public class FXMLDocumentController implements Initializable {
     private ToggleButton seleccionarColorButton;
     @FXML
     private ToggleButton pintarCirculoButton;
+    
+    // ================== variables ===========================================
+    private Object drawingMark;     // object being currently drawn
+    public Tool tool;               // currently selected tool
+    private ArrayList<Action> recentActions;    // list storing last 5 done actions, used for UNDO
+    private ObservableList<Action> observableRecentActions;
+    
+    // ================== variables for moving protractor ======
+    private double initialX, initialY, baseX, baseY;
     
 
 
@@ -178,20 +177,21 @@ public class FXMLDocumentController implements Initializable {
         zoomGroup.getChildren().add(map_scrollpane.getContent());
         map_scrollpane.setContent(contentGroup);
         
-        drawingMark = null;     // mark which is currently being drawn
-        protractor.setCursor(Cursor.MOVE);
+        //=================== new content =================================
         
         // initial settings
         colorPicker.setValue(Color.RED);
         protractor.setVisible(false);
+        drawingMark = null;     // mark which is currently being drawn
+        protractor.setCursor(Cursor.MOVE);
         
-        // setting spinner
+        // setting spinner (changing width of line/circle or size of text)
         // arguments(min, max, initialValue, amountToStepBy)
         double d = Settings.LINE_STROKE_NORMAL;
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 8, d, 1);
         grosorSpinner.setValueFactory(valueFactory);
         
-        // binding -> spinner is active only with tools: draw line, draw circle, add text
+        // binding -> spinner is active only with tools: draw line, draw circle, add text (so is label)
         grosorSpinner.disableProperty().bind(Bindings.or(Bindings.or(pintarLineaButton.selectedProperty(), pintarCirculoButton.selectedProperty()), anotarTextoButton.selectedProperty()).not());
         grosorLabel.disableProperty().bind(Bindings.or(Bindings.or(pintarLineaButton.selectedProperty(), pintarCirculoButton.selectedProperty()), anotarTextoButton.selectedProperty()).not());
         
@@ -215,7 +215,7 @@ public class FXMLDocumentController implements Initializable {
         BooleanBinding markGroupPopulated = marksGroupSize.greaterThan(1);       
         limpiarButton.disableProperty().bind(markGroupPopulated.not());
         
-        // Tooltips
+        // Tooltips (descriptions displayed when cursor is hovered over button for a while)
         marcarPuntoButton.setTooltip(new Tooltip(Instructions.MARK_POINT_INSTR));
         pintarLineaButton.setTooltip(new Tooltip(Instructions.DRAW_LINE_INSTR));
         pintarCirculoButton.setTooltip(new Tooltip(Instructions.DRAW_CIRCLE_INSTR));
@@ -225,24 +225,13 @@ public class FXMLDocumentController implements Initializable {
         cambiarColorButton.setTooltip(new Tooltip(Instructions.CHANGE_COLOR_INSTR));
         eliminarMarcaButton.setTooltip(new Tooltip(Instructions.DELETE_INSTR));
         
+        // Seting color names in color picker to Spanish
         Locale.setDefault(new Locale("es"));
+        
+        // Here ands initialize()
+        // :O
     }
 
-    @FXML
-    private void cerrarAplicacion(ActionEvent event) {
-        ((Stage)zoom_slider.getScene().getWindow()).close();
-    }
-
-    @FXML
-    private void acercaDe(ActionEvent event) {
-        Alert mensaje= new Alert(Alert.AlertType.INFORMATION);
-        mensaje.setTitle("Acerca de");
-        mensaje.setHeaderText("IPC - 2022");
-        mensaje.showAndWait();
-    }
-
-    // ============== Practica ================
-    
     // ============== Getters & setters =================
     
     public ColorPicker getColorPicker() {
@@ -258,7 +247,7 @@ public class FXMLDocumentController implements Initializable {
         return grosorSpinner;
     }
     
-    // ============== Tools buttons ==============================
+    // ====================== Tools and other buttons =========================
     @FXML
     private void marcarPuntoClicked(ActionEvent event) {
         tool = Tool.MARK_POINT;
@@ -326,8 +315,7 @@ public class FXMLDocumentController implements Initializable {
         instructionLabel.setText(Instructions.EXTREMES_INSTR);
         pane.setCursor(Cursor.CROSSHAIR);
     }
-    
-    
+        
     @FXML
     private void limpiarButtonClicked(ActionEvent event) {
         
@@ -369,6 +357,19 @@ public class FXMLDocumentController implements Initializable {
         lastAction.undo();
         observableRecentActions.remove(lastAction);
     }
+    
+    @FXML
+    private void cerrarAplicacion(ActionEvent event) {
+        ((Stage)zoom_slider.getScene().getWindow()).close();
+    }
+    
+    @FXML
+    private void acercaDe(ActionEvent event) {
+        Alert mensaje= new Alert(Alert.AlertType.INFORMATION);
+        mensaje.setTitle("Acerca de");
+        mensaje.setHeaderText("IPC - 2022");
+        mensaje.showAndWait();
+    }
         
     // =============== Event handlers ================================
     @FXML
@@ -379,6 +380,7 @@ public class FXMLDocumentController implements Initializable {
             initializeCircle(event);
         }
     }
+    
     @FXML
     private void paneDragged(MouseEvent event) {
         if (tool == Tool.DRAW_LINE) {
@@ -392,8 +394,8 @@ public class FXMLDocumentController implements Initializable {
             circle.setRadius(radius);
             event.consume();
         }
-        
     }
+    
     @FXML
     private void paneReleased(MouseEvent event) {
         if (drawingMark instanceof LineExtended){
@@ -401,7 +403,6 @@ public class FXMLDocumentController implements Initializable {
         } else if (drawingMark instanceof CircleExtended) {
             finalizeCircle();
         }
-        
     }
     
     @FXML
@@ -430,7 +431,7 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void protractorReleased(MouseEvent event) {
-//        event.consume();
+        
     }
 
     @FXML
@@ -580,11 +581,4 @@ public class FXMLDocumentController implements Initializable {
         return (result.isPresent() && result.get() == buttonContinue);
         
     }
-    
-   
-
-
-
-    
-
 }
