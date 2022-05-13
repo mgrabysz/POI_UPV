@@ -5,37 +5,24 @@
  */
 package poiupv;
 
-import DBAccess.NavegacionDAO;
-import DBAccess.NavegacionDAOException;
 import javafx.scene.paint.Color;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
-import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
@@ -45,34 +32,20 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import model.Answer;
-import model.Navegacion;
-import static model.Navegacion.getSingletonNavegacion;
-import model.Problem;
 import poiupv.acciones.Action;
 import poiupv.acciones.ActionNewExtreme;
 import poiupv.acciones.ActionNewMark;
 import poiupv.marcas.CircleExtended;
 import poiupv.constantes.Instructions;
 import poiupv.marcas.LineExtended;
-import poiupv.Poi;
-import poiupv.Poi;
 import poiupv.marcas.Point;
 import poiupv.constantes.Settings;
 import poiupv.marcas.TextFieldExtended;
@@ -143,7 +116,6 @@ public class FXMLDocumentController implements Initializable {
     public Tool tool;               // currently selected tool
     private ArrayList<Action> recentActions;    // list storing last 5 done actions, used for UNDO
     private ObservableList<Action> observableRecentActions;
-    private Navegacion navegacion;
     
     // ================== variables for moving protractor ======
     private double initialX, initialY, baseX, baseY;
@@ -234,31 +206,6 @@ public class FXMLDocumentController implements Initializable {
         IntegerBinding marksGroupSize = Bindings.size(zoomGroup.getChildren());
         BooleanBinding markGroupPopulated = marksGroupSize.greaterThan(1);       
         limpiarButton.disableProperty().bind(markGroupPopulated.not());
-        
-        // Connection to database
-        try {
-            navegacion = getSingletonNavegacion();
-        } catch (NavegacionDAOException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-           
-                
-        List<Problem> problems = navegacion.getProblems();
-        Problem problem0 = problems.get(0);
-        System.out.println(problems.size());
-        
-        String text = problem0.getText();
-        System.out.println(text);
-        
-        List<Answer> answers = problem0.getAnswers();
-        
-        for (Answer answer : answers) {
-            System.out.println(answer.getText());
-            System.out.println(answer.getValidity());
-        }
-        
-        Point point = new Point(Settings.RADIUS_NORMAL, Settings.RADIUS_BIG, this);
-        
     }
 
     @FXML
@@ -357,9 +304,6 @@ public class FXMLDocumentController implements Initializable {
         pane.setCursor(Cursor.CROSSHAIR);
     }
     
-    @FXML
-    private void colorPickerClicked(ActionEvent event) {
-    }
     
     @FXML
     private void limpiarButtonClicked(ActionEvent event) {
@@ -598,9 +542,6 @@ public class FXMLDocumentController implements Initializable {
    
 
 
-    @FXML
-    private void scrollPaneMouseEntered(MouseEvent event) {
-    }
 
     
 

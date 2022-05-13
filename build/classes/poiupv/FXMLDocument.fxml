@@ -78,7 +78,7 @@
             <VBox minWidth="160.0" prefHeight="529.0" prefWidth="160.0" spacing="15.0">
                <children>
                   <Label text="Color:" />
-                  <ColorPicker fx:id="colorPicker" onAction="#colorPickerClicked" prefWidth="140.0" />
+                  <ColorPicker fx:id="colorPicker" prefWidth="140.0" />
                   <Separator prefWidth="200.0" />
                   <Label fx:id="grosorLabel" text="Grosor/tamaño:" />
                   <Spinner fx:id="grosorSpinner" editable="true" prefWidth="140.0" />
@@ -89,7 +89,7 @@
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
             </VBox>
-            <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" onMouseEntered="#scrollPaneMouseEntered" onMouseExited="#scrollPaneMouseExited" pannable="true" prefHeight="529.0" prefWidth="703.0" vbarPolicy="ALWAYS">
+            <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" onMouseExited="#scrollPaneMouseExited" pannable="true" prefHeight="529.0" prefWidth="703.0" vbarPolicy="ALWAYS">
                <content>
                   <Pane fx:id="pane" onMouseClicked="#paneClicked" onMouseDragged="#paneDragged" onMousePressed="#panePressed" onMouseReleased="#paneReleased">
                      <children>
