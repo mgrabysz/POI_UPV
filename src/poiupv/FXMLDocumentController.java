@@ -8,7 +8,6 @@ package poiupv;
 import javafx.scene.paint.Color;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -25,14 +24,11 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
@@ -63,15 +59,11 @@ import poiupv.constantes.Tool;
  */
 public class FXMLDocumentController implements Initializable {
 
-    //=======================================
-    // hashmap para guardar los puntos de interes POI
-    private final HashMap<String, Poi> hm = new HashMap<>();
     // ======================================
     // la variable zoomGroup se utiliza para dar soporte al zoom
     // el escalado se realiza sobre este nodo, al escalar el Group no mueve sus nodos
     private Group zoomGroup;
 
-    private ListView<Poi> map_listview;
     @FXML
     private ScrollPane map_scrollpane;
     @FXML
