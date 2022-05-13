@@ -65,8 +65,18 @@ import model.Answer;
 import model.Navegacion;
 import static model.Navegacion.getSingletonNavegacion;
 import model.Problem;
+import poiupv.acciones.Action;
+import poiupv.acciones.ActionNewExtreme;
+import poiupv.acciones.ActionNewMark;
+import poiupv.marcas.CircleExtended;
+import poiupv.constantes.Instructions;
+import poiupv.marcas.LineExtended;
 import poiupv.Poi;
-import poiupv.Point;
+import poiupv.Poi;
+import poiupv.marcas.Point;
+import poiupv.constantes.Settings;
+import poiupv.marcas.TextFieldExtended;
+import poiupv.constantes.Tool;
 
 /**
  *
@@ -247,7 +257,7 @@ public class FXMLDocumentController implements Initializable {
             System.out.println(answer.getValidity());
         }
         
-        
+        Point point = new Point(Settings.RADIUS_NORMAL, Settings.RADIUS_BIG, this);
         
     }
 
@@ -426,6 +436,7 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void paneClicked(MouseEvent event) {
+
         if (tool == Tool.MARK_POINT) {
             marcarPunto(event);
         } else if (tool == Tool.ADD_TEXT && drawingMark == null) {
@@ -489,7 +500,6 @@ public class FXMLDocumentController implements Initializable {
     // ================== Additional functions =====================
     
     private void marcarPunto(MouseEvent event) {
-        
         Point point = new Point(Settings.RADIUS_NORMAL, Settings.RADIUS_BIG, this);
         zoomGroup.getChildren().add(point);
         ActionNewMark action = new ActionNewMark(this, point);      // saving the action in order to be able to UNDO

@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package poiupv;
+package poiupv.marcas;
 
+import poiupv.acciones.ActionNewMark;
+import poiupv.FXMLDocumentController;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;

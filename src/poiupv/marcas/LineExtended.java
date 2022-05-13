@@ -3,40 +3,44 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package poiupv;
+package poiupv.marcas;
 
+import poiupv.acciones.ActionChangeColor;
+import poiupv.acciones.ActionDeleteMark;
+import poiupv.FXMLDocumentController;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Spinner;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import poiupv.constantes.Tool;
 
 /**
  *
  * @author margr
  */
-public class CircleExtended extends Circle {
+public class LineExtended extends Line {
     
-    private final double widthNormal, widthBig, initialX;
+    private final double widthNormal, widthBig;
     private final FXMLDocumentController controller;
     
-    public CircleExtended(double x, double y, double widthNormal, double widthBig, FXMLDocumentController controller){
-        super(1);
-        this.setCenterX(x);
-        this.setCenterY(y);
-        this.initialX = x;
-        this.controller = controller;
-        this.widthBig = widthBig;
+    public LineExtended(double x1, double y1, double x2, double y2, double widthNormal, double widthBig, FXMLDocumentController controller){
+        super(x1, y1, x2, y2);
         this.widthNormal = widthNormal;
+        this.widthBig = widthBig;
+        this.controller = controller;
         this.setStrokeWidth(widthNormal);
         this.setStroke(controller.getColorPicker().getValue());
-        this.setFill(Color.TRANSPARENT);
         this.setMouseTransparent(true);
     }
     
-    public double getInitialX() {
-        return initialX;
+    public void select() {
+        controller.getColorPicker().setValue((Color)this.getStroke());
     }
     
     public void distinguish() {
@@ -56,19 +60,19 @@ public class CircleExtended extends Circle {
     
     public void initializeHandlers() {
         
-        // event handler for clicking on circle
+        // event handler for clicking on line
         EventHandler<MouseEvent> eventHandlerMouseClicked = new EventHandler<MouseEvent>() { 
             @Override 
             public void handle(MouseEvent e) { 
                 
                 if (controller.tool == Tool.CHANGE_COLOR){   // mode of color changing, no selection
-                    ActionChangeColor action = new ActionChangeColor(controller, (Color)CircleExtended.this.getStroke(), CircleExtended.this);
+                    ActionChangeColor action = new ActionChangeColor(controller, (Color)LineExtended.this.getStroke(), LineExtended.this);
                     controller.saveAction(action);
-                    CircleExtended.this.setStroke(controller.getColorPicker().getValue());
-                } else if (controller.tool == Tool.SELECTION) {    // selection
-                    controller.getColorPicker().setValue((Color)CircleExtended.this.getStroke());
+                    LineExtended.this.setStroke(controller.getColorPicker().getValue());
+                } else if (controller.tool == Tool.SELECTION) {    // color selection mode
+                    controller.getColorPicker().setValue((Color)LineExtended.this.getStroke());
                 } else if (controller.tool == Tool.DELETE) {    // deleting mode
-                    ActionDeleteMark action = new ActionDeleteMark(controller, CircleExtended.this);
+                    ActionDeleteMark action = new ActionDeleteMark(controller, LineExtended.this);
                     controller.saveAction(action);
                     controller.getZoomGroup().getChildren().remove((Node)e.getSource());
                 }
@@ -79,21 +83,36 @@ public class CircleExtended extends Circle {
         EventHandler<MouseEvent> eventHandlerMouseEntered = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
                 if (controller.tool == Tool.SELECTION || controller.tool == Tool.CHANGE_COLOR || controller.tool == Tool.DELETE) {    // selection || change_color
-                    CircleExtended.this.distinguish();
+                    LineExtended.this.distinguish();
                 }
             }
         };
         EventHandler<MouseEvent> eventHandlerMouseExited = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
-                CircleExtended.this.unselect();
+                LineExtended.this.unselect();
             }
         };
         
-        //Registering the event filters
+        // Registering the event filters
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandlerMouseClicked);
         this.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandlerMouseEntered);
         this.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandlerMouseExited);
     
+        // Deleting the line
+//        this.setOnContextMenuRequested(e -> {
+//            ContextMenu contextMenu = new ContextMenu();
+//            MenuItem deleteItem = new MenuItem("eliminar");
+//            contextMenu.getItems().add(deleteItem);
+//            deleteItem.setOnAction(ev -> {
+//               controller.getZoomGroup().getChildren().remove((Node)e.getSource());
+//               ev.consume();
+//            });
+//            contextMenu.show(this, 0, 0);
+//            System.out.println(this);
+//            e.consume();
+//        });
     }
-
+    
+    
+    
 }

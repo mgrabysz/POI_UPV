@@ -3,14 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package poiupv;
+package poiupv.marcas;
 
+import poiupv.acciones.ActionChangeColor;
+import poiupv.acciones.ActionDeleteMark;
+import poiupv.FXMLDocumentController;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import poiupv.constantes.Settings;
+import poiupv.constantes.Tool;
 
 /**
  *

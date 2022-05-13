@@ -3,72 +3,70 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package poiupv;
+package poiupv.marcas;
 
+import poiupv.acciones.ActionDeleteMark;
+import poiupv.acciones.ActionChangeColor;
+import poiupv.FXMLDocumentController;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Spinner;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import poiupv.constantes.Tool;
 
 /**
  *
  * @author margr
  */
-public class LineExtended extends Line {
+public class TextExtended extends Text {
     
-    private final double widthNormal, widthBig;
     private final FXMLDocumentController controller;
-    
-    public LineExtended(double x1, double y1, double x2, double y2, double widthNormal, double widthBig, FXMLDocumentController controller){
-        super(x1, y1, x2, y2);
-        this.widthNormal = widthNormal;
-        this.widthBig = widthBig;
+    double size;
+
+    public TextExtended(double x, double y, String text, FXMLDocumentController controller) {
+        super(text);
         this.controller = controller;
-        this.setStrokeWidth(widthNormal);
-        this.setStroke(controller.getColorPicker().getValue());
-        this.setMouseTransparent(true);
-    }
-    
-    public void select() {
-        controller.getColorPicker().setValue((Color)this.getStroke());
+        this.size = (double)controller.getGrosorSpinner().getValue();
+        this.setX(x);
+        this.setY(y);
+        this.setFill(controller.getColorPicker().getValue());
+        this.setFont(Font.font("Gafata", FontWeight.NORMAL, size));
+        this.initializeHandlers();
     }
     
     public void distinguish() {
         /**
          * Makes object a little bit bigger when mouse hovers
          */
-        this.setStrokeWidth(widthBig);
+        this.setFont(Font.font("Gafata", FontWeight.BOLD, size));
         this.setCursor(Cursor.HAND);
     }
     public void unselect() {
         /**
          * Also undistinguish
          */
-        this.setStrokeWidth(widthNormal);
+        this.setFont(Font.font("Gafata", FontWeight.NORMAL, size));
         this.setCursor(Cursor.DEFAULT);
     }
     
     public void initializeHandlers() {
-        
-        // event handler for clicking on line
+        // event handler for clicking on circle
         EventHandler<MouseEvent> eventHandlerMouseClicked = new EventHandler<MouseEvent>() { 
             @Override 
             public void handle(MouseEvent e) { 
                 
                 if (controller.tool == Tool.CHANGE_COLOR){   // mode of color changing, no selection
-                    ActionChangeColor action = new ActionChangeColor(controller, (Color)LineExtended.this.getStroke(), LineExtended.this);
+                    ActionChangeColor action = new ActionChangeColor(controller, (Color)TextExtended.this.getFill(), TextExtended.this);
                     controller.saveAction(action);
-                    LineExtended.this.setStroke(controller.getColorPicker().getValue());
-                } else if (controller.tool == Tool.SELECTION) {    // color selection mode
-                    controller.getColorPicker().setValue((Color)LineExtended.this.getStroke());
+                    TextExtended.this.setFill(controller.getColorPicker().getValue());
+                } else if (controller.tool == Tool.SELECTION) {    // selection
+                    controller.getColorPicker().setValue((Color)TextExtended.this.getFill());
                 } else if (controller.tool == Tool.DELETE) {    // deleting mode
-                    ActionDeleteMark action = new ActionDeleteMark(controller, LineExtended.this);
+                    ActionDeleteMark action = new ActionDeleteMark(controller, TextExtended.this);
                     controller.saveAction(action);
                     controller.getZoomGroup().getChildren().remove((Node)e.getSource());
                 }
@@ -79,36 +77,19 @@ public class LineExtended extends Line {
         EventHandler<MouseEvent> eventHandlerMouseEntered = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
                 if (controller.tool == Tool.SELECTION || controller.tool == Tool.CHANGE_COLOR || controller.tool == Tool.DELETE) {    // selection || change_color
-                    LineExtended.this.distinguish();
+                    TextExtended.this.distinguish();
                 }
             }
         };
         EventHandler<MouseEvent> eventHandlerMouseExited = new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
-                LineExtended.this.unselect();
+                TextExtended.this.unselect();
             }
         };
         
-        // Registering the event filters
+        //Registering the event filters
         this.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandlerMouseClicked);
         this.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandlerMouseEntered);
         this.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandlerMouseExited);
-    
-        // Deleting the line
-//        this.setOnContextMenuRequested(e -> {
-//            ContextMenu contextMenu = new ContextMenu();
-//            MenuItem deleteItem = new MenuItem("eliminar");
-//            contextMenu.getItems().add(deleteItem);
-//            deleteItem.setOnAction(ev -> {
-//               controller.getZoomGroup().getChildren().remove((Node)e.getSource());
-//               ev.consume();
-//            });
-//            contextMenu.show(this, 0, 0);
-//            System.out.println(this);
-//            e.consume();
-//        });
     }
-    
-    
-    
 }
